@@ -174,7 +174,6 @@ window.__ModuleLoader__.load({
       if (ReactDOM === null || typeof document === 'undefined') return null;
       return ReactDOM.createPortal(
         h('div', { className: 'jv-frame', 'aria-hidden': 'true' },
-          h('span', { className: 'jv-frame-ticks' }),
           h('span', { className: 'jv-frame-sweep' })),
         document.body,
       );

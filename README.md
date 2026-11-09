@@ -23,7 +23,7 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 - **不兼容调整**：在 `0.x` 阶段仍按功能更新递增，并在更新日志中明确标注
 - 每次发布同步更新 [CHANGELOG.md](CHANGELOG.md)，并打 `v<版本号>` 标签
 
-当前版本：`0.2.1`
+当前版本：`0.2.2`
 
 ## 特性
 
@@ -71,6 +71,7 @@ node scripts/test-splash.mjs
 - The token map targets the 0.2.2 token sheet. A DSH upgrade that renames alias tokens degrades those tokens to the shipped palette; rebuild `tokens.json` from the new `design-platform.css` and re-run the checks.
 - The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
 - Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.
+
 
 
 

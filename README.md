@@ -1,0 +1,46 @@
+# Jarvis HUD
+
+A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness web client, delivered as a profile bundle.
+
+- **Skin**: 127 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*`) remapped to a naval-blue / arc-cyan palette in both light and dark schemes, plus a material layer (1px luminous strokes, HUD radii, screen-space grid + scanlines, Rajdhani UI type, Arc-reactor brand marks).
+- **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
+- **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), and Replay (reloads the page with a one-shot flag).
+
+## Layout
+
+| Path | Role |
+|---|---|
+| `index.js` | Host half (built): pushes the splash `style` + `html` + `script` rows on every index render and serves the self-hosted display fonts at `/jarvis-theme/fonts/*`. |
+| `client.js` | Client half (built): applies the token override layer, injects the material stylesheet, registers the brand marks and the settings row. |
+| `src/client.template.js`, `src/host.template.js` | Sources for the two built artifacts (markers are replaced by `build.mjs`). |
+| `src/splash.{css,html,js}` | Boot overlay styling, markup, and controller. |
+| `src/theme.css` | Material, settings-row, and brand-artwork styles (scoped to `body[data-dsh-jarvis]` where it is skin material). |
+| `tokens.json` | Generated token map (`aliases` / `statics` / `notes`); `build.mjs` flattens it and applies a small corrections table. |
+| `fonts/` | Orbitron + Rajdhani woff2 subsets with their OFL license texts. |
+| `scripts/verify.mjs`, `scripts/test-splash.mjs` | Artifact checks and a stubbed splash-controller smoke test. |
+
+## Build
+
+```sh
+node build.mjs
+node scripts/verify.mjs
+node scripts/test-splash.mjs
+```
+
+`build.mjs` inlines `tokens.json`, `src/theme.css`, and `src/splash.*` into the two artifacts and refuses to write a file containing a closing script/style tag sequence. Publishing (change `version`, then install the directory) follows the Plugin Manager bundle install path.
+
+## Storage keys
+
+| Key | Meaning |
+|---|---|
+| `dsh.jarvis.enabled` | `0` disables the skin and the boot sequence; anything else enables them (default on). |
+| `dsh.jarvis.boot` | `always` \| `daily` \| `once` \| `off`. |
+| `dsh.jarvis.boot.last` | Last local play date used by `daily`. |
+| `dsh.jarvis.boot.played` | Set after the first play used by `once`. |
+| `dsh.jarvis.boot.replay` | One-shot flag set by the Replay button; consumed on the next page load. |
+
+## Known limitations
+
+- The token map targets the 0.2.2 token sheet. A DSH upgrade that renames alias tokens degrades those tokens to the shipped palette; rebuild `tokens.json` from the new `design-platform.css` and re-run the checks.
+- The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
+- Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.

@@ -1,0 +1,245 @@
+/* J.A.R.V.I.S. HUD skin — client-injected stylesheet.
+   Material and typography rules are scoped to body[data-dsh-jarvis]; the
+   settings row and brand artwork use host tokens and stay available while the
+   skin is switched off. */
+
+/* ---------- typography + material layer ---------- */
+
+body[data-dsh-jarvis] {
+  --dsh-font-family-text: 'Jarvis Rajdhani', 'Microsoft YaHei', 'PingFang SC',
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
+
+  /* tighter HUD geometry */
+  --dsw-radius-xs: 3px;
+  --dsw-radius-sm: 5px;
+  --dsw-radius-md: 7px;
+  --dsw-radius-lg: 9px;
+  --dsw-radius-xl: 11px;
+  --dsw-radius-panel: 14px;
+}
+
+/* 1px luminous stroke instead of the 0.25px hairline; values are redeclared per
+   element so surfaces can keep re-binding --dsw-elevation-stroke-color.
+   The hover-card surface is declared locally by the primitive as #2C2C2E; a
+   per-element reset keeps that always-dark card on the HUD navy in both
+   schemes (its literal light-gray labels assume a dark card). */
+body[data-dsh-jarvis],
+body[data-dsh-jarvis] * {
+  --dsw-elevation-stroke: 0 0 0 1px var(--dsw-elevation-stroke-color);
+  --dsw-elevation-panel:
+    var(--dsw-elevation-stroke), 0 0 18px -6px var(--jv-glow-soft, rgba(56, 225, 255, 0.16));
+  --dsw-elevation-prominent:
+    var(--dsw-elevation-stroke), 0 6px 22px -10px rgba(0, 0, 0, 0.55),
+    0 0 26px -8px var(--jv-glow-soft, rgba(56, 225, 255, 0.16));
+  --dsw-elevation-soft:
+    var(--dsw-elevation-stroke), 0 0 22px -10px var(--jv-glow-soft, rgba(56, 225, 255, 0.14));
+  --dsw-hovercard-bg: #0e1822;
+}
+
+body[data-dsh-jarvis]:not([data-ds-dark-theme]) {
+  --jv-glow-soft: rgba(10, 138, 166, 0.12);
+}
+
+body[data-dsh-jarvis][data-ds-dark-theme] {
+  --jv-glow-soft: rgba(56, 225, 255, 0.18);
+}
+
+/* screen-space grid + static scanlines; never intercepts pointer input */
+body[data-dsh-jarvis]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2147482000;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(56, 225, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 225, 255, 0.045) 1px, transparent 1px),
+    repeating-linear-gradient(to bottom, rgba(56, 225, 255, 0.016) 0 1px, transparent 1px 3px);
+  background-size: 44px 44px, 44px 44px, 100% 3px;
+  -webkit-mask-image: radial-gradient(ellipse 92% 84% at 50% 42%, #000 32%, transparent 100%);
+  mask-image: radial-gradient(ellipse 92% 84% at 50% 42%, #000 32%, transparent 100%);
+}
+body[data-dsh-jarvis]:not([data-ds-dark-theme])::after {
+  background-image:
+    linear-gradient(to right, rgba(10, 138, 166, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10, 138, 166, 0.05) 1px, transparent 1px),
+    repeating-linear-gradient(to bottom, rgba(10, 138, 166, 0.02) 0 1px, transparent 1px 3px);
+}
+
+body[data-dsh-jarvis] ::selection {
+  background: rgba(56, 225, 255, 0.26);
+  color: var(--dsw-alias-label-primary);
+}
+body[data-dsh-jarvis]:not([data-ds-dark-theme]) ::selection {
+  background: rgba(10, 138, 166, 0.22);
+}
+
+/* HUD-adjacent chrome that reads only literals keeps the skin's line language */
+body[data-dsh-jarvis] [data-menu-material] {
+  border-color: var(--dsw-alias-border-l2);
+}
+
+@media (prefers-contrast: more) {
+  body[data-dsh-jarvis]::after { display: none; }
+  body[data-dsh-jarvis],
+  body[data-dsh-jarvis] * {
+    --dsw-elevation-panel: var(--dsw-elevation-stroke);
+    --dsw-elevation-prominent: var(--dsw-elevation-stroke);
+    --dsw-elevation-soft: var(--dsw-elevation-stroke);
+  }
+}
+
+/* ---------- settings row ---------- */
+
+.jv-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l2);
+}
+.jv-row-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.jv-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-primary);
+}
+.jv-desc {
+  margin-top: 4px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+}
+.jv-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.jv-switch {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 11px;
+  background: var(--dsw-alias-bg-layer-2);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+.jv-switch[aria-checked='true'] {
+  border-color: var(--dsw-alias-brand-primary);
+  background: var(--dsw-alias-brand-primary);
+}
+.jv-switch:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: 2px;
+}
+.jv-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--dsw-alias-label-secondary);
+  transition: transform 0.18s ease, background-color 0.18s ease;
+}
+.jv-switch[aria-checked='true'] .jv-knob {
+  transform: translateX(18px);
+  background: var(--dsw-alias-bg-base);
+}
+
+.jv-pill,
+.jv-btn {
+  font: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+  transition: color 0.16s ease, border-color 0.16s ease;
+}
+.jv-pill:hover,
+.jv-btn:hover {
+  color: var(--dsw-alias-label-primary);
+  border-color: var(--dsw-alias-border-l2);
+}
+.jv-pill[data-active='true'] {
+  color: var(--dsw-alias-brand-primary);
+  border-color: var(--dsw-alias-brand-primary);
+}
+.jv-pill:focus-visible,
+.jv-btn:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: 2px;
+}
+.jv-hint {
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+/* ---------- brand artwork ---------- */
+
+.jv-brand-mark,
+.jv-hero-mark {
+  display: inline-flex;
+  color: var(--dsw-alias-brand-primary);
+}
+.jv-hero-mark {
+  filter: drop-shadow(0 0 16px var(--dsw-alias-brand-primary));
+}
+body:not([data-ds-dark-theme]) .jv-hero-mark {
+  filter: drop-shadow(0 0 10px rgba(10, 138, 166, 0.35));
+}
+.jv-brand-spin {
+  transform-origin: center;
+  animation: jv-brand-spin 48s linear infinite;
+}
+.jv-brand-pulse {
+  transform-origin: center;
+  animation: jv-brand-pulse 3.6s ease-in-out infinite;
+}
+@keyframes jv-brand-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes jv-brand-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jv-brand-spin,
+  .jv-brand-pulse { animation: none; }
+}
+
+.jv-brand-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Jarvis Orbitron', 'Microsoft YaHei', sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dsw-alias-brand-primary);
+  white-space: nowrap;
+}
+.jv-brand-name small {
+  font-family: 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--dsw-alias-label-secondary);
+}

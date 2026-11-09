@@ -1,0 +1,3 @@
+- insert:
+    - id: jarvis-theme
+      name: '@local/jarvis-theme'

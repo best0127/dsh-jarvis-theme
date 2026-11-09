@@ -1,0 +1,430 @@
+/* J.A.R.V.I.S. boot overlay — injected as an index <style> row by the Host half.
+   Palette follows the document's light/dark attribute set by the theme boot row. */
+
+@font-face {
+  font-family: 'Jarvis Orbitron';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/jarvis-theme/fonts/orbitron-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jarvis Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/jarvis-theme/fonts/rajdhani-500-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Jarvis Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/jarvis-theme/fonts/rajdhani-600-latin.woff2') format('woff2');
+}
+
+#dsh-jarvis-boot {
+  --jv-bg: #04070b;
+  --jv-ink: #eaf7ff;
+  --jv-dim: #7e97a8;
+  --jv-faint: rgba(168, 194, 212, 0.55);
+  --jv-accent: #38e1ff;
+  --jv-accent-2: #8ff3ff;
+  --jv-amber: #ffb020;
+  --jv-line: rgba(120, 226, 255, 0.22);
+  --jv-glow: rgba(56, 225, 255, 0.55);
+  --jv-glow-strong: rgba(56, 225, 255, 0.85);
+  --jv-mono: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, 'Microsoft YaHei', monospace;
+  --jv-display: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
+  --jv-ui: 'Jarvis Rajdhani', 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
+
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--jv-bg);
+  color: var(--jv-ink);
+  font-family: var(--jv-ui);
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  opacity: 1;
+}
+#dsh-jarvis-boot[data-mode='light'] {
+  --jv-bg: #eef3f8;
+  --jv-ink: #0b1c26;
+  --jv-dim: #4f6776;
+  --jv-faint: rgba(60, 85, 102, 0.55);
+  --jv-accent: #00687d;
+  --jv-accent-2: #0a8aa6;
+  --jv-amber: #8a5300;
+  --jv-line: rgba(10, 138, 166, 0.26);
+  --jv-glow: rgba(10, 138, 166, 0.35);
+  --jv-glow-strong: rgba(10, 138, 166, 0.55);
+}
+#dsh-jarvis-boot[data-state='out'] {
+  opacity: 0;
+  transition: opacity 0.38s ease;
+  pointer-events: none;
+}
+
+/* ---------- ambient layers ---------- */
+
+.jv-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--jv-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--jv-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 20%, transparent 78%);
+}
+.jv-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 52%, transparent 30%, var(--jv-bg) 82%),
+    linear-gradient(180deg, var(--jv-bg) 0%, transparent 18%, transparent 82%, var(--jv-bg) 100%);
+}
+.jv-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--jv-accent-soft, rgba(56, 225, 255, 0.25)), transparent);
+  opacity: 0;
+  animation: jv-scan 3.6s linear 0.2s 1 both;
+}
+#dsh-jarvis-boot[data-mode='light'] .jv-scan {
+  background: linear-gradient(90deg, transparent, rgba(10, 138, 166, 0.28), transparent);
+}
+@keyframes jv-scan {
+  0% { opacity: 0; transform: translateY(-4px); }
+  12% { opacity: 0.9; }
+  88% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(100vh); }
+}
+
+.jv-corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  opacity: 0;
+  animation: jv-fade 0.5s ease 0.15s 1 both;
+  pointer-events: none;
+}
+.jv-corner::before,
+.jv-corner::after {
+  content: '';
+  position: absolute;
+  background: var(--jv-accent);
+  opacity: 0.7;
+}
+.jv-corner::before { width: 100%; height: 1px; }
+.jv-corner::after { width: 1px; height: 100%; }
+.jv-tl { top: 22px; left: 22px; }
+.jv-tr { top: 22px; right: 22px; transform: scaleX(-1); }
+.jv-bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
+.jv-br { bottom: 22px; right: 22px; transform: scale(-1, -1); }
+
+.jv-hud {
+  position: absolute;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--jv-dim);
+  opacity: 0;
+  animation: jv-fade 0.6s ease 0.35s 1 both;
+  pointer-events: none;
+}
+.jv-hud-tl { top: 30px; left: 58px; }
+.jv-hud-tr { top: 30px; right: 58px; }
+.jv-hud-bl { bottom: 30px; left: 58px; }
+.jv-hud-br { bottom: 30px; right: 58px; }
+
+/* ---------- reactor ---------- */
+
+.jv-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  transform: translateY(-3vh);
+}
+.jv-reactor {
+  position: relative;
+  width: min(38vh, 360px);
+  height: min(38vh, 360px);
+  filter: drop-shadow(0 0 26px var(--jv-glow));
+}
+#dsh-jarvis-boot[data-lite='1'] .jv-reactor { filter: none; }
+.jv-reactor svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.jv-ring {
+  fill: none;
+  stroke: var(--jv-accent);
+  stroke-linecap: round;
+  transform-origin: 200px 200px;
+}
+.jv-ring-outer {
+  stroke-width: 2.5;
+  stroke-dasharray: 300 90 40 90;
+  opacity: 0;
+  animation: jv-ring-draw 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.25s 1 both, jv-ring-spin 46s linear 1.4s infinite;
+}
+.jv-ring-tick {
+  stroke-width: 7;
+  stroke-dasharray: 2 17;
+  stroke-opacity: 0.55;
+  opacity: 0;
+  animation: jv-fade 0.9s ease 0.55s 1 both, jv-ring-spin-rev 70s linear 1.5s infinite;
+}
+.jv-ring-mid {
+  stroke-width: 5;
+  stroke-dasharray: 196 24;
+  opacity: 0;
+  animation: jv-ring-draw 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.4s 1 both, jv-ring-spin-rev 32s linear 1.4s infinite;
+}
+.jv-ring-inner {
+  stroke-width: 2;
+  stroke-opacity: 0.75;
+  stroke-dasharray: 40 14;
+  opacity: 0;
+  animation: jv-ring-draw 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.55s 1 both, jv-ring-spin 22s linear 1.4s infinite;
+}
+@keyframes jv-ring-draw {
+  from { opacity: 0; stroke-dashoffset: 900; }
+  30% { opacity: 1; }
+  to { opacity: 1; stroke-dashoffset: 0; }
+}
+@keyframes jv-ring-spin { to { transform: rotate(360deg); } }
+@keyframes jv-ring-spin-rev { to { transform: rotate(-360deg); } }
+
+.jv-coil {
+  fill: var(--jv-accent);
+  opacity: 0;
+  animation: jv-coil-on 0.5s ease 1 1 both;
+}
+@keyframes jv-coil-on {
+  0% { opacity: 0; }
+  35% { opacity: 1; }
+  100% { opacity: 0.82; }
+}
+
+.jv-core-halo {
+  fill: url(#jv-core-grad);
+  opacity: 0;
+  animation: jv-halo 0.8s ease 1.55s 1 both;
+  transform-origin: 200px 200px;
+}
+@keyframes jv-halo {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+.jv-core-flash {
+  fill: #ffffff;
+  opacity: 0;
+  transform-origin: 200px 200px;
+  animation: jv-flash 0.62s ease-out 1.42s 1 both;
+}
+@keyframes jv-flash {
+  0% { opacity: 0; transform: scale(0.4); }
+  26% { opacity: 0.95; }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+.jv-core {
+  fill: #f2feff;
+  transform-origin: 200px 200px;
+  animation: jv-pulse 2.6s ease-in-out 1.9s infinite;
+}
+@keyframes jv-pulse {
+  0%, 100% { opacity: 0.92; }
+  50% { opacity: 1; }
+}
+
+/* ---------- titles ---------- */
+
+.jv-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.jv-mark {
+  font-family: var(--jv-display);
+  font-weight: 700;
+  font-size: clamp(26px, 4.6vh, 44px);
+  letter-spacing: 0.42em;
+  margin-right: -0.42em;
+  text-transform: uppercase;
+  color: var(--jv-ink);
+  text-shadow: 0 0 18px var(--jv-glow), 0 0 42px rgba(56, 225, 255, 0.25);
+  opacity: 0;
+  animation: jv-title 1.05s cubic-bezier(0.16, 1, 0.3, 1) 1.7s 1 both;
+}
+#dsh-jarvis-boot[data-mode='light'] .jv-mark { text-shadow: 0 0 10px rgba(10, 138, 166, 0.35); }
+@keyframes jv-title {
+  from { opacity: 0; letter-spacing: 0.62em; margin-right: -0.62em; transform: translateY(6px); }
+  to { opacity: 1; letter-spacing: 0.2em; margin-right: -0.2em; transform: translateY(0); }
+}
+.jv-sub {
+  font-family: var(--jv-ui);
+  font-weight: 600;
+  font-size: clamp(10px, 1.5vh, 13px);
+  letter-spacing: 0.32em;
+  margin-right: -0.32em;
+  text-transform: uppercase;
+  color: var(--jv-dim);
+  clip-path: inset(0 0 0 0);
+  opacity: 0;
+  animation: jv-reveal 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.45s 1 both;
+}
+.jv-status {
+  font-family: var(--jv-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--jv-amber);
+  opacity: 0;
+  animation: jv-fade 0.5s ease 2.9s 1 both;
+}
+@keyframes jv-reveal {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+
+/* ---------- boot log ---------- */
+
+.jv-log {
+  position: absolute;
+  left: 58px;
+  bottom: 78px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--jv-mono);
+  font-size: 10.5px;
+  line-height: 1.55;
+  letter-spacing: 0.06em;
+  color: var(--jv-faint);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.jv-log > div {
+  opacity: 0;
+  animation: jv-fade 0.22s ease 1 both;
+}
+.jv-log .jv-ok { color: var(--jv-accent); }
+
+/* ---------- footer / progress ---------- */
+
+.jv-foot {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  width: min(420px, 52vw);
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  animation: jv-fade 0.5s ease 0.6s 1 both;
+}
+.jv-progress {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  background: var(--jv-line);
+}
+.jv-progress > span {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--jv-accent-2), var(--jv-accent));
+  box-shadow: 0 0 12px var(--jv-glow);
+  animation: jv-progress 4.05s cubic-bezier(0.25, 1, 0.5, 1) 0.15s 1 both;
+}
+@keyframes jv-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+#dsh-jarvis-boot[data-reduced='1'] .jv-progress > span { animation: none !important; transform: scaleX(1); }
+#dsh-jarvis-boot[data-complete='1'] .jv-status { color: var(--jv-accent); }
+.jv-pct {
+  font-family: var(--jv-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  color: var(--jv-dim);
+  min-width: 40px;
+  text-align: right;
+}
+.jv-skip {
+  position: absolute;
+  right: 58px;
+  bottom: 78px;
+  font-family: var(--jv-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--jv-faint);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: jv-fade 0.6s ease 1.2s 1 both, jv-blink 3.2s ease-in-out 1.8s infinite;
+  pointer-events: none;
+}
+@keyframes jv-blink { 0%, 100% { opacity: 0.32; } 50% { opacity: 0.8; } }
+
+/* final sweep: the reactor frame opens into two HUD lines */
+.jv-sweep {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--jv-accent), transparent);
+  opacity: 0;
+  transform: translateX(-50%);
+  animation: jv-sweep 0.55s cubic-bezier(0.16, 1, 0.3, 1) 3.05s 1 both;
+  pointer-events: none;
+}
+@keyframes jv-sweep {
+  0% { width: 0; opacity: 0; transform: translateX(-50%); }
+  30% { opacity: 0.9; }
+  100% { width: min(72vw, 900px); opacity: 0; transform: translate(-50%, 150px); }
+}
+
+@keyframes jv-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Reduced motion: final state without choreography. */
+#dsh-jarvis-boot[data-reduced='1'] *,
+#dsh-jarvis-boot[data-reduced='1'] *::before,
+#dsh-jarvis-boot[data-reduced='1'] *::after {
+  animation: none !important;
+}
+#dsh-jarvis-boot[data-reduced='1'] .jv-ring,
+#dsh-jarvis-boot[data-reduced='1'] .jv-ring-tick,
+#dsh-jarvis-boot[data-reduced='1'] .jv-coil,
+#dsh-jarvis-boot[data-reduced='1'] .jv-mark,
+#dsh-jarvis-boot[data-reduced='1'] .jv-sub,
+#dsh-jarvis-boot[data-reduced='1'] .jv-status,
+#dsh-jarvis-boot[data-reduced='1'] .jv-foot,
+#dsh-jarvis-boot[data-reduced='1'] .jv-hud,
+#dsh-jarvis-boot[data-reduced='1'] .jv-corner,
+#dsh-jarvis-boot[data-reduced='1'] .jv-log > div,
+#dsh-jarvis-boot[data-reduced='1'] .jv-core-halo,
+#dsh-jarvis-boot[data-reduced='1'] .jv-skip {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}

@@ -37,7 +37,8 @@ check(indexSource.includes('/jarvis-theme/fonts/'), 'index.js serves the font ro
 check(indexSource.includes('dsh-jarvis-boot'), 'index.js embeds the splash markup');
 check(indexSource.includes('jv-reactor'), 'index.js embeds the reactor markup');
 check(/export function apply/.test(indexSource), 'index.js exports apply');
-check(/export const inject = \['webServer'\]/.test(indexSource), 'index.js declares webServer injection');
+check(/export const inject = \[[^\]]*'webServer'[^\]]*\]/.test(indexSource), 'index.js declares webServer injection');
+check(indexSource.includes('/jarvis-theme/balance'), 'index.js serves the balance route');
 
 const aliases = Object.keys(tokens.aliases).length;
 const statics = Object.keys(tokens.statics ?? {}).length;

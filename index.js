@@ -18,10 +18,47 @@ const FONT_TYPES = {
   'rajdhani-600-latin.woff2': 'font/woff2',
 };
 
-export const inject = ['webServer'];
+const BALANCE_PATH = '/api/jarvis-theme/balance';
+const BALANCE_CACHE_MS = 20_000;
+let balanceCache = null;
 
 /**
- * Push the boot overlay rows and serve the font assets.
+ * Build the Platform request identity for one signed balance read.
+ * @returns the metadata the account service forwards to Platform.
+ */
+function accountMetadata() {
+  return {
+    version: process.env.DSH_CLIENT_VERSION || process.env.DSH_VERSION || '0.0.0',
+    locale: 'zh',
+    // Date.getTimezoneOffset reports minutes west of UTC; Platform wants seconds east.
+    timezoneOffsetSeconds: -new Date().getTimezoneOffset() * 60,
+  };
+}
+
+/**
+ * Read the signed account's recharge and bonus wallets without exposing the credential.
+ * @param ctx - Host plugin context.
+ * @returns a JSON-safe summary; failures carry a reason instead of a zero balance.
+ */
+async function readBalance(ctx) {
+  const account = ctx.get('deepseekAccount');
+  if (account === undefined) return { ok: false, reason: 'account-unavailable' };
+  try {
+    const state = await account.getState();
+    if (state.status !== 'credential-stored') return { ok: true, signedOut: true };
+    const balance = await account.getBalance(accountMetadata());
+    if (balance === null) return { ok: false, reason: 'signed-out' };
+    if (balance.status !== 'ready') return { ok: false, reason: 'read-failed' };
+    return { ok: true, wallets: balance.value, bonusWallets: balance.bonusWallets };
+  } catch (error) {
+    return { ok: false, reason: 'error' };
+  }
+}
+
+export const inject = ['webServer', 'connection'];
+
+/**
+ * Push the boot overlay rows, serve the font assets, and expose the account balance.
  * @param ctx - Host plugin context.
  */
 export function apply(ctx) {
@@ -61,4 +98,23 @@ export function apply(ctx) {
       }
     },
   }), 'jarvis-theme: font route');
+
+  ctx.effect(() => {
+    const dispose = ctx.connection.fetch.register({
+      path: BALANCE_PATH,
+      methods: ['GET'],
+      requestBody: 'buffered',
+      fetch: async () => {
+        const now = Date.now();
+        if (balanceCache === null || now - balanceCache.at > BALANCE_CACHE_MS) {
+          balanceCache = { at: now, payload: await readBalance(ctx) };
+        }
+        return new Response(JSON.stringify(balanceCache.payload), {
+          status: 200,
+          headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+        });
+      },
+    });
+    return () => { void dispose(); };
+  }, 'jarvis-theme: balance route');
 }

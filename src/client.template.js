@@ -205,25 +205,84 @@ window.__ModuleLoader__.load({
         h('div', { className: 'jv-hint' }, t('row.note')));
     }
 
-    /* A small status chip pinned to the viewport's lower-right corner. It
-       reports the bound Session's state in the interface language and portals
-       to body for the same clipping reason as the scan line. */
-    function StatusHud({ useSession }) {
-      const select = typeof useSession === 'function' ? useSession : null;
-      const running = select ? select((snapshot) => snapshot.running === true) : false;
-      const blank = select ? select((snapshot) => snapshot.blank === true) : true;
-      const fault = select ? select((snapshot) => snapshot.lastAgentError !== null) : false;
+    /* A small account-balance chip pinned to the viewport's lower-right corner.
+       It reads the Host route that queries the signed Platform wallet and
+       portals to body so the docked composer cannot clip it. */
+    function formatWallet(wallets) {
+      if (!Array.isArray(wallets) || wallets.length === 0) return null;
+      const wallet = wallets.find((entry) => entry && entry.currency === 'CNY') || wallets[0];
+      if (wallet === undefined || typeof wallet.balance !== 'string') return null;
+      const symbol = wallet.currency === 'USD' ? '$' : '\u00a5';
+      const amount = Number(wallet.balance);
+      const text = Number.isFinite(amount) ? amount.toFixed(2) : wallet.balance;
+      return symbol + text;
+    }
+
+    function formatBonus(wallets) {
+      if (!Array.isArray(wallets) || wallets.length === 0) return '';
+      const total = wallets.reduce((sum, entry) => {
+        const amount = Number(entry && entry.balance);
+        return Number.isFinite(amount) ? sum + amount : sum;
+      }, 0);
+      return total > 0 ? '+' + '\u00a5' + total.toFixed(2) : '';
+    }
+
+    function BalanceChip() {
+      const [view, setView] = React.useState({ phase: 'loading' });
+      React.useEffect(() => {
+        let disposed = false;
+        let timer = 0;
+        const read = () => {
+          fetch('/api/jarvis-theme/balance', { cache: 'no-store' })
+            .then((response) => response.json())
+            .then((data) => { if (!disposed) setView({ phase: 'ready', data }); })
+            .catch(() => { if (!disposed) setView({ phase: 'error' }); });
+        };
+        read();
+        timer = window.setInterval(read, 60_000);
+        const onVisible = () => { if (document.visibilityState === 'visible') read(); };
+        document.addEventListener('visibilitychange', onVisible);
+        return () => {
+          disposed = true;
+          window.clearInterval(timer);
+          document.removeEventListener('visibilitychange', onVisible);
+        };
+      }, []);
       if (ReactDOM === null || typeof document === 'undefined') return null;
       if (!document.body.hasAttribute('data-dsh-jarvis')) return null;
-      const state = running ? 'active' : fault ? 'fault' : blank ? 'standby' : 'idle';
-      const label = state === 'active' ? '\u8fd0\u884c\u4e2d'
-        : state === 'fault' ? '\u6545\u969c'
-          : state === 'standby' ? '\u5f85\u547d'
-            : '\u7a7a\u95f2';
+
+      let state = 'loading';
+      let amount = '\u2026';
+      let bonus = '';
+      if (view.phase === 'error') {
+        state = 'warn';
+        amount = '--';
+      } else if (view.phase === 'ready') {
+        const data = view.data || {};
+        if (data.signedOut === true) {
+          state = 'idle';
+          amount = '\u672a\u767b\u5f55';
+        } else if (data.ok === true) {
+          const text = formatWallet(data.wallets);
+          if (text === null) {
+            state = 'idle';
+            amount = '--';
+          } else {
+            state = 'ok';
+            amount = text;
+            bonus = formatBonus(data.bonusWallets);
+          }
+        } else {
+          state = 'warn';
+          amount = '--';
+        }
+      }
       return ReactDOM.createPortal(
         h('div', { className: 'jv-hud-panel', 'data-state': state, 'aria-hidden': 'true' },
           h('span', { className: 'jv-hud-dot' }),
-          h('span', { className: 'jv-hud-label' }, label)),
+          h('span', { className: 'jv-hud-label' }, '\u4f59\u989d'),
+          h('span', { className: 'jv-hud-amount' }, amount),
+          bonus === '' ? null : h('span', { className: 'jv-hud-bonus' }, bonus)),
         document.body,
       );
     }
@@ -384,9 +443,10 @@ window.__ModuleLoader__.load({
         ctx.slots.inject('conversation.session.header.utilities', () => ctx.slots.register({
           name: 'conversation.session.header.utilities', id: 'jarvis-busy', order: 80,
         }, BusySignal));
-        ctx.slots.inject('conversation.session.header.utilities', () => ctx.slots.register({
-          name: 'conversation.session.header.utilities', id: 'jarvis-status', order: 81,
-        }, StatusHud));
+        /* The balance chip is frame-wide, so it also shows without a Session. */
+        ctx.slots.inject('shell.overlay', () => ctx.slots.register({
+          name: 'shell.overlay', id: 'jarvis-balance', order: 90,
+        }, BalanceChip));
       });
 
       void revision;

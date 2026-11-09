@@ -20,13 +20,13 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 - **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
 - **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), tempo (fast / standard / slow), and Replay (reloads the page with a one-shot flag).
 - **Thinking scan**: while the bound Session is working (thinking, streaming, or executing tools), a cyan scan line sweeps the viewport every 2.6s with a delayed echo, and a faint top edge pulses; both fade out shortly after the work settles.
-- **Status chip**: a small HUD readout in the lower-right corner shows the bound Session's state — `运行中` / `空闲` / `待命` / `故障` — with a status lamp; it dims while idle and brightens while the Session runs.
+- **Balance chip**: a small HUD readout in the lower-right corner shows the signed Platform account's recharge balance (`余额 ¥123.45`) plus any granted bonus (`+¥10.00`); the Host half serves it from `/api/jarvis-theme/balance` over the authenticated connection and never exposes the credential. Failures show `--`, a signed-out account shows `未登录`, and the value refreshes every 60 seconds.
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `index.js` | Host half (built): pushes the splash `style` + `html` + `script` rows on every index render and serves the self-hosted display fonts at `/jarvis-theme/fonts/*`. |
+| `index.js` | Host half (built): pushes the splash `style` + `html` + `script` rows on every index render, serves the self-hosted display fonts at `/jarvis-theme/fonts/*`, and answers `GET /api/jarvis-theme/balance` from the signed Platform wallet. |
 | `client.js` | Client half (built): applies the token override layer, injects the material stylesheet, registers the brand marks and the settings row. |
 | `src/client.template.js`, `src/host.template.js` | Sources for the two built artifacts (markers are replaced by `build.mjs`). |
 | `src/splash.{css,html,js}` | Boot overlay styling, markup, and controller. |
@@ -61,3 +61,4 @@ node scripts/test-splash.mjs
 - The token map targets the 0.2.2 token sheet. A DSH upgrade that renames alias tokens degrades those tokens to the shipped palette; rebuild `tokens.json` from the new `design-platform.css` and re-run the checks.
 - The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
 - Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.
+

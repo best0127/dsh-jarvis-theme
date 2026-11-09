@@ -259,7 +259,7 @@ body[data-dsh-jarvis] .jv-scan-top {
   body[data-dsh-jarvis] .jv-scan-top { animation: none; opacity: 0.35; }
 }
 
-/* ---------- lower-right status chip ---------- */
+/* ---------- lower-right balance chip ---------- */
 
 body[data-dsh-jarvis] .jv-hud-panel {
   position: fixed;
@@ -279,14 +279,14 @@ body[data-dsh-jarvis] .jv-hud-panel {
   font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', system-ui, sans-serif;
   font-size: 11px;
   line-height: 1;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--dsw-alias-label-secondary);
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.62;
   transition: opacity 0.2s ease;
 }
-body[data-dsh-jarvis] .jv-hud-panel[data-state='active'],
-body[data-dsh-jarvis] .jv-hud-panel[data-state='fault'] {
+body[data-dsh-jarvis] .jv-hud-panel[data-state='ok'],
+body[data-dsh-jarvis] .jv-hud-panel[data-state='warn'] {
   opacity: 0.95;
 }
 body[data-dsh-jarvis] .jv-hud-panel::before,
@@ -316,24 +316,40 @@ body[data-dsh-jarvis] .jv-hud-dot {
   background: var(--dsw-alias-state-idle-primary);
 }
 body[data-dsh-jarvis] .jv-hud-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--dsw-alias-label-secondary);
+}
+body[data-dsh-jarvis] .jv-hud-amount {
+  font-family: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--dsw-alias-label-primary);
 }
-body[data-dsh-jarvis] .jv-hud-panel[data-state='active'] .jv-hud-dot {
+body[data-dsh-jarvis] .jv-hud-bonus {
+  font-family: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: var(--dsw-alias-brand-primary);
+}
+body[data-dsh-jarvis] .jv-hud-panel[data-state='ok'] .jv-hud-dot {
   background: var(--dsw-alias-brand-primary);
   box-shadow: 0 0 10px var(--dsw-alias-brand-primary);
+}
+body[data-dsh-jarvis] .jv-hud-panel[data-state='warn'] .jv-hud-dot {
+  background: var(--dsw-alias-state-warn-primary);
+  box-shadow: 0 0 10px var(--dsw-alias-state-warn-primary);
+}
+body[data-dsh-jarvis] .jv-hud-panel[data-state='loading'] .jv-hud-dot {
   animation: jv-hud-pulse 1.6s ease-in-out infinite;
 }
-body[data-dsh-jarvis] .jv-hud-panel[data-state='fault'] .jv-hud-dot {
-  background: var(--dsw-alias-state-error-primary);
-  box-shadow: 0 0 10px var(--dsw-alias-state-error-primary);
-}
 @keyframes jv-hud-pulse {
-  0%, 100% { opacity: 0.45; }
+  0%, 100% { opacity: 0.35; }
   50% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  body[data-dsh-jarvis] .jv-hud-panel[data-state='active'] .jv-hud-dot { animation: none; opacity: 1; }
+  body[data-dsh-jarvis] .jv-hud-panel[data-state='loading'] .jv-hud-dot { animation: none; opacity: 1; }
 }
 
 /* ---------- brand artwork ---------- */

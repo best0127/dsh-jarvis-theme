@@ -2,7 +2,21 @@
 
 A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness web client, delivered as a profile bundle.
 
-- **Skin**: 127 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*`) remapped to a naval-blue / arc-cyan palette in both light and dark schemes, plus a material layer (1px luminous strokes, HUD radii, screen-space grid + scanlines, Rajdhani UI type, Arc-reactor brand marks).
+## 安装
+
+1. 克隆仓库到本地任意目录：
+
+   ```sh
+   gh repo clone best0127/dsh-jarvis-theme
+   ```
+
+2. 把目录作为本地插件包安装到 DSH profile（Plugin Manager 的本地 bundle 安装入口，或让 Agent 使用 `plugin_manager` 的 `install_bundle` 指向该目录）。
+3. 皮肤与品牌替换即时生效；启动动画在下次打开应用时播放（每次启动、可点击或按键跳过）。
+4. 卸载或禁用该 bundle 即恢复原生主题，不会残留样式。
+
+## 特性
+
+- **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a naval-blue / arc-cyan palette in both light and dark schemes, plus a material layer (1px luminous strokes, HUD radii, screen-space grid + scanlines, Rajdhani UI type, Arc-reactor brand marks).
 - **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
 - **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), and Replay (reloads the page with a one-shot flag).
 
@@ -15,7 +29,7 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 | `src/client.template.js`, `src/host.template.js` | Sources for the two built artifacts (markers are replaced by `build.mjs`). |
 | `src/splash.{css,html,js}` | Boot overlay styling, markup, and controller. |
 | `src/theme.css` | Material, settings-row, and brand-artwork styles (scoped to `body[data-dsh-jarvis]` where it is skin material). |
-| `tokens.json` | Generated token map (`aliases` / `statics` / `notes`); `build.mjs` flattens it and applies a small corrections table. |
+| `tokens.json` | Generated token map (`aliases` / `statics` / `notes`); `build.mjs` flattens it, applies a small corrections table, and adds the surface tokens in `TOKEN_EXTRA`. |
 | `fonts/` | Orbitron + Rajdhani woff2 subsets with their OFL license texts. |
 | `scripts/verify.mjs`, `scripts/test-splash.mjs` | Artifact checks and a stubbed splash-controller smoke test. |
 

@@ -199,10 +199,11 @@ body[data-dsh-jarvis] [data-menu-material] {
   z-index: 2147482500;
   pointer-events: none;
   overflow: hidden;
-  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 body[data-dsh-jarvis][data-dsh-busy] .jv-scan {
-  display: block;
+  opacity: 1;
 }
 body[data-dsh-jarvis] .jv-scan-line {
   position: absolute;

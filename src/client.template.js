@@ -119,18 +119,39 @@ window.__ModuleLoader__.load({
     }
 
     /* The scan overlay itself lives in the document for the plugin's lifetime;
-       the busy attribute only toggles it, so a composer re-layout cannot
-       restart or unmount the animation. */
-    function BusySignal({ useSession }) {
+       the busy attribute only toggles its opacity, so no re-render or layout
+       can restart the sweep. */
+    let busyTimer = null;
+    function markBusy(busy) {
+      const body = document.body;
+      if (busy) {
+        if (busyTimer !== null) {
+          clearTimeout(busyTimer);
+          busyTimer = null;
+        }
+        body.setAttribute('data-dsh-busy', '');
+        return;
+      }
+      if (busyTimer !== null) return;
+      busyTimer = setTimeout(() => {
+        busyTimer = null;
+        body.removeAttribute('data-dsh-busy');
+      }, 2200);
+    }
+
+    function BusySignal({ useSession, useChat }) {
       const running = typeof useSession === 'function'
         ? useSession((snapshot) => snapshot.running === true)
         : false;
-      React.useEffect(() => {
-        const body = document.body;
-        if (running) body.setAttribute('data-dsh-busy', '');
-        else body.removeAttribute('data-dsh-busy');
-        return () => { body.removeAttribute('data-dsh-busy'); };
-      }, [running]);
+      /* `running` drops between request steps; live chat activity (streaming
+         partial or executing tool calls) covers those gaps. */
+      const streaming = typeof useChat === 'function'
+        ? useChat((chat) => Boolean(chat && chat.legacy
+          && (chat.legacy.partial !== null || chat.legacy.runningCalls.length > 0)))
+        : false;
+      const busy = running || streaming;
+      React.useEffect(() => { markBusy(busy); }, [busy]);
+      React.useEffect(() => () => { markBusy(false); }, []);
       return null;
     }
 
@@ -346,6 +367,10 @@ window.__ModuleLoader__.load({
           scan.appendChild(echo);
           document.body.appendChild(scan);
           return () => {
+            if (busyTimer !== null) {
+              clearTimeout(busyTimer);
+              busyTimer = null;
+            }
             document.body.removeAttribute('data-dsh-busy');
             if (scan.parentNode) scan.parentNode.removeChild(scan);
           };

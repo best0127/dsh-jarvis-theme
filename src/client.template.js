@@ -229,6 +229,7 @@ window.__ModuleLoader__.load({
 
     function BalanceChip() {
       const [view, setView] = React.useState({ phase: 'loading' });
+      const [skinOn, setSkinOn] = React.useState(() => document.body.hasAttribute('data-dsh-jarvis'));
       React.useEffect(() => {
         let disposed = false;
         let timer = 0;
@@ -242,14 +243,20 @@ window.__ModuleLoader__.load({
         timer = window.setInterval(read, 60_000);
         const onVisible = () => { if (document.visibilityState === 'visible') read(); };
         document.addEventListener('visibilitychange', onVisible);
+        /* The chip is skin chrome: hide it the moment the skin is switched off. */
+        const observer = typeof MutationObserver === 'function'
+          ? new MutationObserver(() => { setSkinOn(document.body.hasAttribute('data-dsh-jarvis')); })
+          : null;
+        if (observer !== null) observer.observe(document.body, { attributes: true, attributeFilter: ['data-dsh-jarvis'] });
         return () => {
           disposed = true;
           window.clearInterval(timer);
           document.removeEventListener('visibilitychange', onVisible);
+          if (observer !== null) observer.disconnect();
         };
       }, []);
       if (ReactDOM === null || typeof document === 'undefined') return null;
-      if (!document.body.hasAttribute('data-dsh-jarvis')) return null;
+      if (!skinOn) return null;
 
       let state = 'loading';
       let amount = '\u2026';

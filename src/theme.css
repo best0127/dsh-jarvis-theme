@@ -49,8 +49,9 @@ body[data-dsh-jarvis][data-ds-dark-theme] {
   --jv-glow-soft: rgba(56, 225, 255, 0.18);
 }
 
-/* Screen-space ambience: a sparse dot lattice plus soft edge glow and vignette.
-   Dots are 1px and 42px apart, so no continuous line ever crosses body text. */
+/* Screen-space ambience: a sparse HUD grid at very low alpha, plus soft edge
+   glow and vignette. Lines are tuned down from the first attempt so body text
+   stays readable; the fine scanline pattern is gone. */
 body[data-dsh-jarvis]::after {
   content: '';
   position: fixed;
@@ -58,17 +59,21 @@ body[data-dsh-jarvis]::after {
   z-index: 2147482000;
   pointer-events: none;
   background:
-    radial-gradient(circle, rgba(56, 225, 255, 0.13) 1px, transparent 1.6px) 0 0 / 42px 42px,
+    linear-gradient(to right, rgba(56, 225, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 225, 255, 0.028) 1px, transparent 1px),
     radial-gradient(ellipse 120% 70% at 50% -18%, rgba(56, 225, 255, 0.07), transparent 62%),
     radial-gradient(ellipse 140% 90% at 50% 118%, rgba(56, 225, 255, 0.05), transparent 70%),
     radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(2, 5, 10, 0.5) 100%);
+  background-size: 44px 44px, 44px 44px, auto, auto, auto;
   animation: jv-ambient 14s ease-in-out infinite;
 }
 body[data-dsh-jarvis]:not([data-ds-dark-theme])::after {
   background:
-    radial-gradient(circle, rgba(10, 138, 166, 0.12) 1px, transparent 1.6px) 0 0 / 42px 42px,
+    linear-gradient(to right, rgba(10, 138, 166, 0.034) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10, 138, 166, 0.034) 1px, transparent 1px),
     radial-gradient(ellipse 120% 70% at 50% -18%, rgba(10, 138, 166, 0.07), transparent 62%),
     radial-gradient(ellipse 130% 120% at 50% 50%, transparent 55%, rgba(11, 28, 38, 0.08) 100%);
+  background-size: 44px 44px, 44px 44px, auto, auto;
 }
 @keyframes jv-ambient {
   0%, 100% { opacity: 0.9; }

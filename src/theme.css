@@ -193,12 +193,16 @@ body[data-dsh-jarvis] [data-menu-material] {
 
 /* ---------- thinking scan ---------- */
 
-body[data-dsh-jarvis] .jv-scan {
+.jv-scan {
   position: fixed;
   inset: 0;
   z-index: 2147482500;
   pointer-events: none;
   overflow: hidden;
+  display: none;
+}
+body[data-dsh-jarvis][data-dsh-busy] .jv-scan {
+  display: block;
 }
 body[data-dsh-jarvis] .jv-scan-line {
   position: absolute;

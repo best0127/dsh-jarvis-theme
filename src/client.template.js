@@ -118,21 +118,20 @@ window.__ModuleLoader__.load({
       }, h('span', { className: 'jv-knob' }));
     }
 
-    /* A scan line sweeps the viewport only while the bound Session is running.
-       It portals to body so the docked composer cannot clip it. */
-    function ThinkingScan({ useSession }) {
+    /* The scan overlay itself lives in the document for the plugin's lifetime;
+       the busy attribute only toggles it, so a composer re-layout cannot
+       restart or unmount the animation. */
+    function BusySignal({ useSession }) {
       const running = typeof useSession === 'function'
         ? useSession((snapshot) => snapshot.running === true)
         : false;
-      if (ReactDOM === null || !running || typeof document === 'undefined') return null;
-      if (!document.body.hasAttribute('data-dsh-jarvis')) return null;
-      return ReactDOM.createPortal(
-        h('div', { className: 'jv-scan', 'aria-hidden': 'true' },
-          h('div', { className: 'jv-scan-top' }),
-          h('div', { className: 'jv-scan-line' }),
-          h('div', { className: 'jv-scan-line jv-scan-echo' })),
-        document.body,
-      );
+      React.useEffect(() => {
+        const body = document.body;
+        if (running) body.setAttribute('data-dsh-busy', '');
+        else body.removeAttribute('data-dsh-busy');
+        return () => { body.removeAttribute('data-dsh-busy'); };
+      }, [running]);
+      return null;
     }
 
     function SettingsRow(props) {
@@ -332,16 +331,36 @@ window.__ModuleLoader__.load({
       });
 
       step('scanline', () => {
-        if (ReactDOM === null) return;
-        ctx.slots.inject('conversation.input.overlay', () => ctx.slots.register({
-          name: 'conversation.input.overlay', id: 'jarvis-thinking', order: 40,
-        }, ThinkingScan));
+        ctx.effect(() => {
+          const scan = document.createElement('div');
+          scan.className = 'jv-scan';
+          scan.setAttribute('aria-hidden', 'true');
+          const top = document.createElement('div');
+          top.className = 'jv-scan-top';
+          const line = document.createElement('div');
+          line.className = 'jv-scan-line';
+          const echo = document.createElement('div');
+          echo.className = 'jv-scan-line jv-scan-echo';
+          scan.appendChild(top);
+          scan.appendChild(line);
+          scan.appendChild(echo);
+          document.body.appendChild(scan);
+          return () => {
+            document.body.removeAttribute('data-dsh-busy');
+            if (scan.parentNode) scan.parentNode.removeChild(scan);
+          };
+        }, 'jarvis-theme: scan overlay');
       });
 
-      step('status-hud', () => {
+      step('signals', () => {
         if (ReactDOM === null) return;
-        ctx.slots.inject('conversation.input.overlay', () => ctx.slots.register({
-          name: 'conversation.input.overlay', id: 'jarvis-status', order: 41,
+        /* Header utilities stay mounted for the whole Session, unlike the
+           composer overlays that change while a turn streams. */
+        ctx.slots.inject('conversation.session.header.utilities', () => ctx.slots.register({
+          name: 'conversation.session.header.utilities', id: 'jarvis-busy', order: 80,
+        }, BusySignal));
+        ctx.slots.inject('conversation.session.header.utilities', () => ctx.slots.register({
+          name: 'conversation.session.header.utilities', id: 'jarvis-status', order: 81,
         }, StatusHud));
       });
 

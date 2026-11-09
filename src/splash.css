@@ -24,10 +24,10 @@
 }
 
 #dsh-jarvis-boot {
-  --jv-bg: #04070b;
-  --jv-ink: #eaf7ff;
-  --jv-dim: #7e97a8;
-  --jv-faint: rgba(168, 194, 212, 0.55);
+  --jv-bg: #030303;
+  --jv-ink: #f5f5f5;
+  --jv-dim: #8f8f8f;
+  --jv-faint: rgba(160, 160, 160, 0.55);
   --jv-accent: #38e1ff;
   --jv-accent-2: #8ff3ff;
   --jv-amber: #ffb020;
@@ -55,10 +55,10 @@
   opacity: 1;
 }
 #dsh-jarvis-boot[data-mode='light'] {
-  --jv-bg: #eef3f8;
-  --jv-ink: #0b1c26;
-  --jv-dim: #4f6776;
-  --jv-faint: rgba(60, 85, 102, 0.55);
+  --jv-bg: #f4f4f4;
+  --jv-ink: #141414;
+  --jv-dim: #5f5f5f;
+  --jv-faint: rgba(85, 85, 85, 0.55);
   --jv-accent: #00687d;
   --jv-accent-2: #0a8aa6;
   --jv-amber: #8a5300;
@@ -428,3 +428,4 @@
   opacity: 1;
   stroke-dashoffset: 0;
 }
+

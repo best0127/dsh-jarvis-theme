@@ -11,6 +11,7 @@ body[data-dsh-jarvis] {
   --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
   --jv-frame-line: rgba(56, 225, 255, 0.4);
   --jv-frame-glow: rgba(56, 225, 255, 0.18);
+  background-color: #050505;
 
   /* tighter HUD geometry */
   --dsw-radius-xs: 3px;
@@ -36,13 +37,14 @@ body[data-dsh-jarvis] * {
     0 0 26px -8px var(--jv-glow-soft, rgba(56, 225, 255, 0.16));
   --dsw-elevation-soft:
     var(--dsw-elevation-stroke), 0 0 22px -10px var(--jv-glow-soft, rgba(56, 225, 255, 0.14));
-  --dsw-hovercard-bg: #0e1822;
+  --dsw-hovercard-bg: #101010;
 }
 
 body[data-dsh-jarvis]:not([data-ds-dark-theme]) {
   --jv-frame-line: rgba(10, 138, 166, 0.5);
   --jv-frame-glow: rgba(10, 138, 166, 0.16);
   --jv-glow-soft: rgba(10, 138, 166, 0.12);
+  background-color: #f4f4f4;
 }
 
 body[data-dsh-jarvis][data-ds-dark-theme] {
@@ -63,7 +65,7 @@ body[data-dsh-jarvis]::after {
     linear-gradient(to bottom, rgba(56, 225, 255, 0.028) 1px, transparent 1px),
     radial-gradient(ellipse 120% 70% at 50% -18%, rgba(56, 225, 255, 0.07), transparent 62%),
     radial-gradient(ellipse 140% 90% at 50% 118%, rgba(56, 225, 255, 0.05), transparent 70%),
-    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(2, 5, 10, 0.5) 100%);
+    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
   background-size: 44px 44px, 44px 44px, auto, auto, auto;
   animation: jv-ambient 14s ease-in-out infinite;
 }
@@ -72,7 +74,7 @@ body[data-dsh-jarvis]:not([data-ds-dark-theme])::after {
     linear-gradient(to right, rgba(10, 138, 166, 0.034) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(10, 138, 166, 0.034) 1px, transparent 1px),
     radial-gradient(ellipse 120% 70% at 50% -18%, rgba(10, 138, 166, 0.07), transparent 62%),
-    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 55%, rgba(11, 28, 38, 0.08) 100%);
+    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 55%, rgba(18, 18, 18, 0.07) 100%);
   background-size: 44px 44px, 44px 44px, auto, auto;
 }
 @keyframes jv-ambient {
@@ -400,3 +402,5 @@ body:not([data-ds-dark-theme]) .jv-hero-mark {
   letter-spacing: 0.18em;
   color: var(--dsw-alias-label-secondary);
 }
+
+

@@ -64,7 +64,63 @@ const TOKEN_EXTRA = {
 
 /* The runtime contract takes one flat token-name -> { light, dark } map, so the
    generated container (aliases/statics/notes) is flattened before inlining. */
-const tokenMap = { ...tokens.aliases, ...(tokens.statics ?? {}), ...TOKEN_EXTRA };
+const rawTokenMap = { ...tokens.aliases, ...(tokens.statics ?? {}), ...TOKEN_EXTRA };
+
+/* Black-theme recolor: neutral colors (surfaces, text, borders without hue) are
+   desaturated to gray, and dark surfaces are pulled toward true black; accents
+   (cyan, amber, red, green) keep their hue. This turns the naval-blue palette
+   into a black palette while preserving every role's contrast order. */
+const NEUTRAL_CHROMA = 60;
+const DARK_SURFACE_Y = 96;
+const DARK_SURFACE_FACTOR = 0.62;
+
+function parseColor(value) {
+  const text = value.trim().toLowerCase();
+  let match = /^#([0-9a-f]{3,8})$/.exec(text);
+  if (match !== null) {
+    const hex = match[1];
+    const expand = (part) => (part.length === 1 ? parseInt(part + part, 16) : parseInt(part, 16));
+    const parts = hex.length === 3 || hex.length === 4
+      ? [hex.slice(0, 1), hex.slice(1, 2), hex.slice(2, 3), hex.length === 4 ? hex.slice(3, 4) : 'ff']
+      : hex.length === 6 || hex.length === 8
+        ? [hex.slice(0, 2), hex.slice(2, 4), hex.slice(4, 6), hex.length === 8 ? hex.slice(6, 8) : 'ff']
+        : null;
+    if (parts === null) return null;
+    return { r: expand(parts[0]), g: expand(parts[1]), b: expand(parts[2]), a: expand(parts[3]) / 255 };
+  }
+  match = /^rgba?\(([^)]+)\)$/.exec(text);
+  if (match === null) return null;
+  const nums = match[1].split(',').map((part) => part.trim());
+  if (nums.length < 3 || nums.length > 4) return null;
+  const channel = (part) => (part.endsWith('%') ? Math.round(parseFloat(part) * 2.55) : Math.round(parseFloat(part)));
+  const alpha = nums.length === 4 ? (nums[3].endsWith('%') ? parseFloat(nums[3]) / 100 : parseFloat(nums[3])) : 1;
+  const color = { r: channel(nums[0]), g: channel(nums[1]), b: channel(nums[2]), a: alpha };
+  if ([color.r, color.g, color.b, color.a].some((n) => !Number.isFinite(n))) return null;
+  return color;
+}
+
+function formatColor(color) {
+  const clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
+  if (color.a >= 0.999) {
+    return '#' + [color.r, color.g, color.b].map((v) => clamp(v).toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+  return `rgba(${clamp(color.r)}, ${clamp(color.g)}, ${clamp(color.b)}, ${Number(color.a.toFixed(3))})`;
+}
+
+function neutralize(value, scheme) {
+  const color = parseColor(value);
+  if (color === null) return value;
+  const chroma = Math.max(color.r, color.g, color.b) - Math.min(color.r, color.g, color.b);
+  if (chroma > NEUTRAL_CHROMA) return value;
+  let y = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+  if (scheme === 'dark' && y < DARK_SURFACE_Y) y *= DARK_SURFACE_FACTOR;
+  return formatColor({ r: y, g: y, b: y, a: color.a });
+}
+
+const tokenMap = Object.fromEntries(Object.entries(rawTokenMap).map(([name, pair]) => [name, {
+  light: neutralize(pair.light, 'light'),
+  dark: neutralize(pair.dark, 'dark'),
+}]));
 
 function inline(template, values) {
   let out = template;

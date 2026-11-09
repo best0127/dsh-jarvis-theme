@@ -18,7 +18,8 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 
 - **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a naval-blue / arc-cyan palette in both light and dark schemes, plus a material layer (1px luminous strokes, HUD radii, screen-space grid + scanlines, Rajdhani UI type, Arc-reactor brand marks).
 - **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
-- **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), and Replay (reloads the page with a one-shot flag).
+- **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), tempo (fast / standard / slow), and Replay (reloads the page with a one-shot flag).
+- **Thinking scan**: while the bound Session is running, a cyan scan line sweeps the viewport and a faint top edge pulses; both disappear when the Session goes idle.
 
 ## Layout
 
@@ -52,6 +53,7 @@ node scripts/test-splash.mjs
 | `dsh.jarvis.boot.last` | Last local play date used by `daily`. |
 | `dsh.jarvis.boot.played` | Set after the first play used by `once`. |
 | `dsh.jarvis.boot.replay` | One-shot flag set by the Replay button; consumed on the next page load. |
+| `dsh.jarvis.boot.pace` | Boot-sequence tempo: `fast` \| `normal` \| `slow` (default `normal`, 0.9× playback so the sequence runs slightly longer). |
 
 ## Known limitations
 

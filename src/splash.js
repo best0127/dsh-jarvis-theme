@@ -12,6 +12,8 @@
   var KEY_LAST = 'dsh.jarvis.boot.last';
   var KEY_PLAYED = 'dsh.jarvis.boot.played';
   var KEY_REPLAY = 'dsh.jarvis.boot.replay';
+  var KEY_PACE = 'dsh.jarvis.boot.pace';
+  var PACE_RATES = { fast: 1.15, normal: 0.9, slow: 0.7 };
 
   function read(key) {
     try { return localStorage.getItem(key); } catch (error) { return null; }
@@ -47,7 +49,8 @@
   write(KEY_LAST, today());
   write(KEY_PLAYED, '1');
 
-  var watchdog = window.setTimeout(function () { hideNow(); }, WATCHDOG);
+  var rate = PACE_RATES[read(KEY_PACE) || 'normal'] || PACE_RATES.normal;
+  var watchdog = window.setTimeout(function () { hideNow(); }, WATCHDOG / rate);
 
   function hideNow() {
     try {
@@ -68,11 +71,22 @@
     if ((navigator.hardwareConcurrency || 8) <= 4) root.setAttribute('data-lite', '1');
     root.style.display = 'flex';
 
+    /* One playback rate scales every declared animation and its delay, so the
+       stored pace needs no duplicated timelines. */
+    requestAnimationFrame(function () {
+      try {
+        var animations = root.getAnimations({ subtree: true });
+        for (var index = 0; index < animations.length; index += 1) {
+          animations[index].playbackRate = rate;
+        }
+      } catch (error) { /* older engines keep the default pace */ }
+    });
+
     var started = performance.now();
     var finished = false;
     var pct = root.querySelector('.jv-pct');
     var probe = 0;
-    var budget = reduced ? 900 : DURATION;
+    var budget = reduced ? 900 : DURATION / rate;
 
     function finish() {
       if (finished) return;
@@ -124,7 +138,7 @@
         if (pct) pct.textContent = '100%';
         root.setAttribute('data-complete', '1');
       }
-      waitForShell(started + MAX_WAIT);
+      waitForShell(started + MAX_WAIT / rate);
     }, budget);
 
     window.__dshJarvisBoot = Object.freeze({

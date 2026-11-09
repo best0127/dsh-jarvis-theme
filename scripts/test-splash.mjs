@@ -104,11 +104,12 @@ const check = (ok, message) => { if (!ok) failures.push(message); };
 
 // 3. Playing, shell never mounts: the wait deadline still ends the splash.
 {
-  const bench = harness({ storage: { 'dsh.jarvis.enabled': '1' }, mountChildren: 0 });
+  const bench = harness({ storage: { 'dsh.jarvis.enabled': '1', 'dsh.jarvis.boot.pace': 'fast' }, mountChildren: 0 });
   bench.run();
-  bench.advance(4200);
+  // fast pace (1.15x) puts the 4.2s timeline at ~3.65s
+  bench.advance(3700);
   check(bench.root.getAttribute('data-complete') === '1', 'timeout: animation reached 100%');
-  bench.advance(8200);
+  bench.advance(7130);
   bench.advance(600);
   check(bench.root.isConnected === false, 'timeout: overlay removed after wait deadline');
 }

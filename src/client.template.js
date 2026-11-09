@@ -7,6 +7,8 @@ window.__ModuleLoader__.load({
   factory(require) {
     const React = require('react');
     const h = React.createElement;
+    let ReactDOM = null;
+    try { ReactDOM = require('react-dom'); } catch (error) { /* overlay degrades to nothing */ }
 
     const TOKENS = __TOKENS__;
     const THEME_CSS = __THEME_CSS__;
@@ -17,8 +19,10 @@ window.__ModuleLoader__.load({
       last: 'dsh.jarvis.boot.last',
       played: 'dsh.jarvis.boot.played',
       replay: 'dsh.jarvis.boot.replay',
+      pace: 'dsh.jarvis.boot.pace',
     };
     const BOOT_MODES = ['always', 'daily', 'once', 'off'];
+    const PACES = ['fast', 'normal', 'slow'];
 
     const DICT = {
       en: {
@@ -31,6 +35,10 @@ window.__ModuleLoader__.load({
         'row.mode.once': 'First time',
         'row.mode.off': 'Off',
         'row.replay': 'Replay',
+        'row.pace': 'Pace',
+        'row.pace.fast': 'Fast',
+        'row.pace.normal': 'Standard',
+        'row.pace.slow': 'Slow',
         'row.note': 'The boot sequence plays on the next application launch.',
       },
       zh: {
@@ -43,6 +51,10 @@ window.__ModuleLoader__.load({
         'row.mode.once': '仅首次',
         'row.mode.off': '关闭',
         'row.replay': '重播',
+        'row.pace': '节奏',
+        'row.pace.fast': '快',
+        'row.pace.normal': '标准',
+        'row.pace.slow': '慢',
         'row.note': '启动动画将在下次打开应用时播放。',
       },
     };
@@ -60,6 +72,10 @@ window.__ModuleLoader__.load({
     function readBoot() {
       const mode = read(KEY.boot);
       return BOOT_MODES.indexOf(mode) >= 0 ? mode : 'always';
+    }
+    function readPace() {
+      const pace = read(KEY.pace);
+      return PACES.indexOf(pace) >= 0 ? pace : 'normal';
     }
 
     function Reactor({ size }) {
@@ -102,9 +118,26 @@ window.__ModuleLoader__.load({
       }, h('span', { className: 'jv-knob' }));
     }
 
+    /* A scan line sweeps the viewport only while the bound Session is running.
+       It portals to body so the docked composer cannot clip it. */
+    function ThinkingScan({ useSession }) {
+      const running = typeof useSession === 'function'
+        ? useSession((snapshot) => snapshot.running === true)
+        : false;
+      if (ReactDOM === null || !running || typeof document === 'undefined') return null;
+      if (!document.body.hasAttribute('data-dsh-jarvis')) return null;
+      return ReactDOM.createPortal(
+        h('div', { className: 'jv-scan', 'aria-hidden': 'true' },
+          h('div', { className: 'jv-scan-top' }),
+          h('div', { className: 'jv-scan-line' })),
+        document.body,
+      );
+    }
+
     function SettingsRow(props) {
       const [enabled, setEnabled] = React.useState(() => props.getEnabled());
       const [boot, setBoot] = React.useState(() => props.getBoot());
+      const [pace, setPace] = React.useState(() => props.getPace());
       const t = typeof props.t === 'function' ? props.t : (key) => DICT.en[key] || key;
       function toggle(next) {
         setEnabled(next);
@@ -114,12 +147,22 @@ window.__ModuleLoader__.load({
         setBoot(mode);
         props.setBoot(mode);
       }
+      function pickPace(next) {
+        setPace(next);
+        props.setPace(next);
+      }
       const pills = BOOT_MODES.map((mode) => h('button', {
         key: mode, type: 'button', className: 'jv-pill',
         'data-active': boot === mode ? 'true' : 'false',
         'aria-pressed': boot === mode,
         onClick: () => { pick(mode); },
       }, t('row.mode.' + mode)));
+      const pacePills = PACES.map((value) => h('button', {
+        key: value, type: 'button', className: 'jv-pill',
+        'data-active': pace === value ? 'true' : 'false',
+        'aria-pressed': pace === value,
+        onClick: () => { pickPace(value); },
+      }, t('row.pace.' + value)));
       return h('div', { className: 'jv-row' },
         h('div', { className: 'jv-row-main' },
           h('div', null,
@@ -132,6 +175,8 @@ window.__ModuleLoader__.load({
         },
         h('span', { className: 'jv-hint' }, t('row.boot') + ':' ),
         pills,
+        h('span', { className: 'jv-hint' }, t('row.pace') + ':' ),
+        pacePills,
         h('button', {
           type: 'button', className: 'jv-btn', disabled: !enabled,
           onClick: () => { props.replay(); },
@@ -248,12 +293,25 @@ window.__ModuleLoader__.load({
               write(KEY.boot, mode);
               revision += 1;
             },
+            getPace: () => readPace(),
+            setPace: (pace) => {
+              if (PACES.indexOf(pace) < 0) return;
+              write(KEY.pace, pace);
+              revision += 1;
+            },
             replay: () => {
               write(KEY.replay, '1');
               location.reload();
             },
           }),
         }, SettingsRow));
+      });
+
+      step('scanline', () => {
+        if (ReactDOM === null) return;
+        ctx.slots.inject('conversation.input.overlay', () => ctx.slots.register({
+          name: 'conversation.input.overlay', id: 'jarvis-thinking', order: 40,
+        }, ThinkingScan));
       });
 
       void revision;

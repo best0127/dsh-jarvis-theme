@@ -191,6 +191,62 @@ body[data-dsh-jarvis] [data-menu-material] {
   line-height: 18px;
 }
 
+/* ---------- thinking scan ---------- */
+
+body[data-dsh-jarvis] .jv-scan {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482500;
+  pointer-events: none;
+  overflow: hidden;
+}
+body[data-dsh-jarvis] .jv-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--dsw-alias-brand-primary) 55%, transparent) 18%,
+    color-mix(in srgb, var(--dsw-alias-brand-primary) 85%, transparent) 50%,
+    color-mix(in srgb, var(--dsw-alias-brand-primary) 55%, transparent) 82%,
+    transparent
+  );
+  box-shadow: 0 0 18px color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent);
+  animation: jv-scan-sweep 3.6s linear infinite;
+}
+@keyframes jv-scan-sweep {
+  0% { transform: translateY(-2vh); opacity: 0; }
+  8% { opacity: 0.55; }
+  92% { opacity: 0.55; }
+  100% { transform: translateY(102vh); opacity: 0; }
+}
+body[data-dsh-jarvis] .jv-scan-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent),
+    transparent
+  );
+  animation: jv-scan-pulse 1.8s ease-in-out infinite;
+}
+@keyframes jv-scan-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-dsh-jarvis] .jv-scan-line { display: none; }
+  body[data-dsh-jarvis] .jv-scan-top { animation: none; opacity: 0.35; }
+}
+
 /* ---------- brand artwork ---------- */
 
 .jv-brand-mark,

@@ -129,7 +129,8 @@ window.__ModuleLoader__.load({
       return ReactDOM.createPortal(
         h('div', { className: 'jv-scan', 'aria-hidden': 'true' },
           h('div', { className: 'jv-scan-top' }),
-          h('div', { className: 'jv-scan-line' })),
+          h('div', { className: 'jv-scan-line' }),
+          h('div', { className: 'jv-scan-line jv-scan-echo' })),
         document.body,
       );
     }
@@ -184,9 +185,10 @@ window.__ModuleLoader__.load({
         h('div', { className: 'jv-hint' }, t('row.note')));
     }
 
-    /* A small telemetry chip pinned to the viewport's lower-right corner. It
-       portals to body for the same clipping reason as the scan line. */
-    function StatusHud({ useSession, sessionId }) {
+    /* A small status chip pinned to the viewport's lower-right corner. It
+       reports the bound Session's state in the interface language and portals
+       to body for the same clipping reason as the scan line. */
+    function StatusHud({ useSession }) {
       const select = typeof useSession === 'function' ? useSession : null;
       const running = select ? select((snapshot) => snapshot.running === true) : false;
       const blank = select ? select((snapshot) => snapshot.blank === true) : true;
@@ -194,15 +196,14 @@ window.__ModuleLoader__.load({
       if (ReactDOM === null || typeof document === 'undefined') return null;
       if (!document.body.hasAttribute('data-dsh-jarvis')) return null;
       const state = running ? 'active' : fault ? 'fault' : blank ? 'standby' : 'idle';
-      const label = running ? 'ACTIVE' : fault ? 'FAULT' : blank ? 'STANDBY' : 'IDLE';
-      const shortId = typeof sessionId === 'string' && sessionId.length >= 4
-        ? sessionId.slice(0, 4).toUpperCase()
-        : '0000';
+      const label = state === 'active' ? '\u8fd0\u884c\u4e2d'
+        : state === 'fault' ? '\u6545\u969c'
+          : state === 'standby' ? '\u5f85\u547d'
+            : '\u7a7a\u95f2';
       return ReactDOM.createPortal(
         h('div', { className: 'jv-hud-panel', 'data-state': state, 'aria-hidden': 'true' },
           h('span', { className: 'jv-hud-dot' }),
-          h('span', { className: 'jv-hud-label' }, label),
-          h('span', { className: 'jv-hud-id' }, 'CORE // ' + shortId)),
+          h('span', { className: 'jv-hud-label' }, label)),
         document.body,
       );
     }

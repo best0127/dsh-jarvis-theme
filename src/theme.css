@@ -216,7 +216,14 @@ body[data-dsh-jarvis] .jv-scan-line {
     transparent
   );
   box-shadow: 0 0 18px color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent);
-  animation: jv-scan-sweep 3.6s linear infinite;
+  animation: jv-scan-sweep 2.6s linear infinite;
+}
+body[data-dsh-jarvis] .jv-scan-echo {
+  height: 1px;
+  opacity: 0;
+  filter: blur(1px);
+  animation-delay: 0.7s;
+  animation-duration: 2.6s;
 }
 @keyframes jv-scan-sweep {
   0% { transform: translateY(-2vh); opacity: 0; }
@@ -264,14 +271,18 @@ body[data-dsh-jarvis] .jv-hud-panel {
   box-shadow: 0 0 20px -10px color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent);
   backdrop-filter: blur(10px) saturate(130%);
   -webkit-backdrop-filter: blur(10px) saturate(130%);
-  font-family: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
-  font-size: 9.5px;
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', system-ui, sans-serif;
+  font-size: 11px;
   line-height: 1;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--dsw-alias-label-secondary);
   pointer-events: none;
-  opacity: 0.92;
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
+}
+body[data-dsh-jarvis] .jv-hud-panel[data-state='active'],
+body[data-dsh-jarvis] .jv-hud-panel[data-state='fault'] {
+  opacity: 0.95;
 }
 body[data-dsh-jarvis] .jv-hud-panel::before,
 body[data-dsh-jarvis] .jv-hud-panel::after {
@@ -302,9 +313,6 @@ body[data-dsh-jarvis] .jv-hud-dot {
 body[data-dsh-jarvis] .jv-hud-label {
   font-weight: 600;
   color: var(--dsw-alias-label-primary);
-}
-body[data-dsh-jarvis] .jv-hud-id {
-  color: color-mix(in srgb, var(--dsw-alias-label-secondary) 70%, transparent);
 }
 body[data-dsh-jarvis] .jv-hud-panel[data-state='active'] .jv-hud-dot {
   background: var(--dsw-alias-brand-primary);

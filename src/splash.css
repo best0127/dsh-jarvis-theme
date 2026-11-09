@@ -28,12 +28,12 @@
   --jv-ink: #f5f5f5;
   --jv-dim: #8f8f8f;
   --jv-faint: rgba(160, 160, 160, 0.55);
-  --jv-accent: #38e1ff;
-  --jv-accent-2: #8ff3ff;
-  --jv-amber: #ffb020;
-  --jv-line: rgba(120, 226, 255, 0.22);
-  --jv-glow: rgba(56, 225, 255, 0.55);
-  --jv-glow-strong: rgba(56, 225, 255, 0.85);
+  --jv-accent: #c9a227;
+  --jv-accent-2: #e4c466;
+  --jv-amber: #c9a227;
+  --jv-line: rgba(201, 162, 39, 0.22);
+  --jv-glow: rgba(201, 162, 39, 0.55);
+  --jv-glow-strong: rgba(201, 162, 39, 0.85);
   --jv-mono: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, 'Microsoft YaHei', monospace;
   --jv-display: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
   --jv-ui: 'Jarvis Rajdhani', 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
@@ -59,12 +59,12 @@
   --jv-ink: #141414;
   --jv-dim: #5f5f5f;
   --jv-faint: rgba(85, 85, 85, 0.55);
-  --jv-accent: #00687d;
-  --jv-accent-2: #0a8aa6;
-  --jv-amber: #8a5300;
-  --jv-line: rgba(10, 138, 166, 0.26);
-  --jv-glow: rgba(10, 138, 166, 0.35);
-  --jv-glow-strong: rgba(10, 138, 166, 0.55);
+  --jv-accent: #6e5411;
+  --jv-accent-2: #7a5e12;
+  --jv-amber: #7a5e12;
+  --jv-line: rgba(138, 106, 18, 0.26);
+  --jv-glow: rgba(138, 106, 18, 0.35);
+  --jv-glow-strong: rgba(138, 106, 18, 0.55);
 }
 #dsh-jarvis-boot[data-state='out'] {
   opacity: 0;
@@ -101,12 +101,12 @@
   top: 0;
   height: 2px;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, var(--jv-accent-soft, rgba(56, 225, 255, 0.25)), transparent);
+  background: linear-gradient(90deg, transparent, var(--jv-accent-soft, rgba(201, 162, 39, 0.25)), transparent);
   opacity: 0;
   animation: jv-scan 3.6s linear 0.2s 1 both;
 }
 #dsh-jarvis-boot[data-mode='light'] .jv-scan {
-  background: linear-gradient(90deg, transparent, rgba(10, 138, 166, 0.28), transparent);
+  background: linear-gradient(90deg, transparent, rgba(138, 106, 18, 0.28), transparent);
 }
 @keyframes jv-scan {
   0% { opacity: 0; transform: translateY(-4px); }
@@ -244,7 +244,7 @@
   100% { opacity: 0; transform: scale(2.2); }
 }
 .jv-core {
-  fill: #f2feff;
+  fill: #faf3df;
   transform-origin: 200px 200px;
   animation: jv-pulse 2.6s ease-in-out 1.9s infinite;
 }
@@ -270,11 +270,11 @@
   margin-right: -0.42em;
   text-transform: uppercase;
   color: var(--jv-ink);
-  text-shadow: 0 0 18px var(--jv-glow), 0 0 42px rgba(56, 225, 255, 0.25);
+  text-shadow: 0 0 18px var(--jv-glow), 0 0 42px rgba(201, 162, 39, 0.25);
   opacity: 0;
   animation: jv-title 1.05s cubic-bezier(0.16, 1, 0.3, 1) 1.7s 1 both;
 }
-#dsh-jarvis-boot[data-mode='light'] .jv-mark { text-shadow: 0 0 10px rgba(10, 138, 166, 0.35); }
+#dsh-jarvis-boot[data-mode='light'] .jv-mark { text-shadow: 0 0 10px rgba(138, 106, 18, 0.35); }
 @keyframes jv-title {
   from { opacity: 0; letter-spacing: 0.62em; margin-right: -0.62em; transform: translateY(6px); }
   to { opacity: 1; letter-spacing: 0.2em; margin-right: -0.2em; transform: translateY(0); }
@@ -428,4 +428,5 @@
   opacity: 1;
   stroke-dashoffset: 0;
 }
+
 

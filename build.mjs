@@ -67,12 +67,14 @@ const TOKEN_EXTRA = {
 const rawTokenMap = { ...tokens.aliases, ...(tokens.statics ?? {}), ...TOKEN_EXTRA };
 
 /* Black-theme recolor: neutral colors (surfaces, text, borders without hue) are
-   desaturated to gray, and dark surfaces are pulled toward true black; accents
-   (cyan, amber, red, green) keep their hue. This turns the naval-blue palette
-   into a black palette while preserving every role's contrast order. */
+   desaturated to gray and dark surfaces are pulled toward true black; cyan
+   accents turn into dark gold; other accents keep their hue. */
 const NEUTRAL_CHROMA = 60;
 const DARK_SURFACE_Y = 96;
 const DARK_SURFACE_FACTOR = 0.62;
+const GOLD = { r: 201, g: 162, b: 39 };
+const GOLD_HUE = 43;
+const GOLD_SATURATION = 0.68;
 
 function parseColor(value) {
   const text = value.trim().toLowerCase();
@@ -107,19 +109,60 @@ function formatColor(color) {
   return `rgba(${clamp(color.r)}, ${clamp(color.g)}, ${clamp(color.b)}, ${Number(color.a.toFixed(3))})`;
 }
 
-function neutralize(value, scheme) {
+function rgbToHsl({ r, g, b }) {
+  const rn = r / 255;
+  const gn = g / 255;
+  const bn = b / 255;
+  const max = Math.max(rn, gn, bn);
+  const min = Math.min(rn, gn, bn);
+  const l = (max + min) / 2;
+  if (max === min) return { h: 0, s: 0, l };
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h;
+  if (max === rn) h = ((gn - bn) / d) % 6;
+  else if (max === gn) h = (bn - rn) / d + 2;
+  else h = (rn - gn) / d + 4;
+  h *= 60;
+  if (h < 0) h += 360;
+  return { h, s, l };
+}
+
+function hslToRgb(h, s, l) {
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  let rgb;
+  if (h < 60) rgb = [c, x, 0];
+  else if (h < 120) rgb = [x, c, 0];
+  else if (h < 180) rgb = [0, c, x];
+  else if (h < 240) rgb = [0, x, c];
+  else if (h < 300) rgb = [x, 0, c];
+  else rgb = [c, 0, x];
+  return { r: (rgb[0] + m) * 255, g: (rgb[1] + m) * 255, b: (rgb[2] + m) * 255 };
+}
+
+function recolor(value, scheme) {
   const color = parseColor(value);
   if (color === null) return value;
   const chroma = Math.max(color.r, color.g, color.b) - Math.min(color.r, color.g, color.b);
-  if (chroma > NEUTRAL_CHROMA) return value;
+  if (chroma > NEUTRAL_CHROMA) {
+    const { h, l } = rgbToHsl(color);
+    if (h < 170 || h > 215) return value; // non-cyan accents keep their hue
+    if (color.a < 0.999) return formatColor({ ...GOLD, a: color.a });
+    const target = scheme === 'dark'
+      ? Math.min(0.62, Math.max(0.2, l * 0.78))
+      : Math.min(0.45, Math.max(0.12, l * 0.6));
+    return formatColor({ ...hslToRgb(GOLD_HUE, GOLD_SATURATION, target), a: 1 });
+  }
   let y = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
   if (scheme === 'dark' && y < DARK_SURFACE_Y) y *= DARK_SURFACE_FACTOR;
   return formatColor({ r: y, g: y, b: y, a: color.a });
 }
 
 const tokenMap = Object.fromEntries(Object.entries(rawTokenMap).map(([name, pair]) => [name, {
-  light: neutralize(pair.light, 'light'),
-  dark: neutralize(pair.dark, 'dark'),
+  light: recolor(pair.light, 'light'),
+  dark: recolor(pair.dark, 'dark'),
 }]));
 
 function inline(template, values) {

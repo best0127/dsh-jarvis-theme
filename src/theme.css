@@ -9,8 +9,8 @@ body[data-dsh-jarvis] {
   --dsh-font-family-text: 'Jarvis Rajdhani', 'Microsoft YaHei', 'PingFang SC',
     -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
-  --jv-frame-line: rgba(56, 225, 255, 0.4);
-  --jv-frame-glow: rgba(56, 225, 255, 0.18);
+  --jv-frame-line: rgba(201, 162, 39, 0.4);
+  --jv-frame-glow: rgba(201, 162, 39, 0.18);
   background-color: #050505;
 
   /* tighter HUD geometry */
@@ -31,24 +31,24 @@ body[data-dsh-jarvis],
 body[data-dsh-jarvis] * {
   --dsw-elevation-stroke: 0 0 0 1px var(--dsw-elevation-stroke-color);
   --dsw-elevation-panel:
-    var(--dsw-elevation-stroke), 0 0 18px -6px var(--jv-glow-soft, rgba(56, 225, 255, 0.16));
+    var(--dsw-elevation-stroke), 0 0 18px -6px var(--jv-glow-soft, rgba(201, 162, 39, 0.16));
   --dsw-elevation-prominent:
     var(--dsw-elevation-stroke), 0 6px 22px -10px rgba(0, 0, 0, 0.55),
-    0 0 26px -8px var(--jv-glow-soft, rgba(56, 225, 255, 0.16));
+    0 0 26px -8px var(--jv-glow-soft, rgba(201, 162, 39, 0.16));
   --dsw-elevation-soft:
-    var(--dsw-elevation-stroke), 0 0 22px -10px var(--jv-glow-soft, rgba(56, 225, 255, 0.14));
+    var(--dsw-elevation-stroke), 0 0 22px -10px var(--jv-glow-soft, rgba(201, 162, 39, 0.14));
   --dsw-hovercard-bg: #101010;
 }
 
 body[data-dsh-jarvis]:not([data-ds-dark-theme]) {
-  --jv-frame-line: rgba(10, 138, 166, 0.5);
-  --jv-frame-glow: rgba(10, 138, 166, 0.16);
-  --jv-glow-soft: rgba(10, 138, 166, 0.12);
+  --jv-frame-line: rgba(138, 106, 18, 0.5);
+  --jv-frame-glow: rgba(138, 106, 18, 0.16);
+  --jv-glow-soft: rgba(138, 106, 18, 0.12);
   background-color: #f4f4f4;
 }
 
 body[data-dsh-jarvis][data-ds-dark-theme] {
-  --jv-glow-soft: rgba(56, 225, 255, 0.18);
+  --jv-glow-soft: rgba(201, 162, 39, 0.18);
 }
 
 /* Screen-space ambience: a sparse HUD grid at very low alpha, plus soft edge
@@ -61,19 +61,19 @@ body[data-dsh-jarvis]::after {
   z-index: 2147482000;
   pointer-events: none;
   background:
-    linear-gradient(to right, rgba(56, 225, 255, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 225, 255, 0.028) 1px, transparent 1px),
-    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(56, 225, 255, 0.07), transparent 62%),
-    radial-gradient(ellipse 140% 90% at 50% 118%, rgba(56, 225, 255, 0.05), transparent 70%),
+    linear-gradient(to right, rgba(201, 162, 39, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(201, 162, 39, 0.028) 1px, transparent 1px),
+    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(201, 162, 39, 0.07), transparent 62%),
+    radial-gradient(ellipse 140% 90% at 50% 118%, rgba(201, 162, 39, 0.05), transparent 70%),
     radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
   background-size: 44px 44px, 44px 44px, auto, auto, auto;
   animation: jv-ambient 14s ease-in-out infinite;
 }
 body[data-dsh-jarvis]:not([data-ds-dark-theme])::after {
   background:
-    linear-gradient(to right, rgba(10, 138, 166, 0.034) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10, 138, 166, 0.034) 1px, transparent 1px),
-    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(10, 138, 166, 0.07), transparent 62%),
+    linear-gradient(to right, rgba(138, 106, 18, 0.034) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(138, 106, 18, 0.034) 1px, transparent 1px),
+    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(138, 106, 18, 0.07), transparent 62%),
     radial-gradient(ellipse 130% 120% at 50% 50%, transparent 55%, rgba(18, 18, 18, 0.07) 100%);
   background-size: 44px 44px, 44px 44px, auto, auto;
 }
@@ -134,11 +134,11 @@ body[data-dsh-jarvis] .jv-frame {
 }
 
 body[data-dsh-jarvis] ::selection {
-  background: rgba(56, 225, 255, 0.26);
+  background: rgba(201, 162, 39, 0.26);
   color: var(--dsw-alias-label-primary);
 }
 body[data-dsh-jarvis]:not([data-ds-dark-theme]) ::selection {
-  background: rgba(10, 138, 166, 0.22);
+  background: rgba(138, 106, 18, 0.22);
 }
 
 /* HUD-adjacent chrome that reads only literals keeps the skin's line language */
@@ -361,7 +361,7 @@ body[data-dsh-jarvis] .jv-hud-panel[data-state='loading'] .jv-hud-dot {
   filter: drop-shadow(0 0 16px var(--dsw-alias-brand-primary));
 }
 body:not([data-ds-dark-theme]) .jv-hero-mark {
-  filter: drop-shadow(0 0 10px rgba(10, 138, 166, 0.35));
+  filter: drop-shadow(0 0 10px rgba(138, 106, 18, 0.35));
 }
 .jv-brand-spin {
   transform-origin: center;
@@ -402,5 +402,6 @@ body:not([data-ds-dark-theme]) .jv-hero-mark {
   letter-spacing: 0.18em;
   color: var(--dsw-alias-label-secondary);
 }
+
 
 

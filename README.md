@@ -14,6 +14,17 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 3. 皮肤与品牌替换即时生效；启动动画在下次打开应用时播放（每次启动、可点击或按键跳过）。
 4. 卸载或禁用该 bundle 即恢复原生主题，不会残留样式。
 
+## 版本规则
+
+从 `0.1.0` 起按语义化版本维护：
+
+- **问题修复**：修订号 +1（`0.1.0 → 0.1.1`）
+- **功能更新**：次版本号 +1、修订号归零（`0.1.0 → 0.2.0`）
+- **不兼容调整**：在 `0.x` 阶段仍按功能更新递增，并在更新日志中明确标注
+- 每次发布同步更新 [CHANGELOG.md](CHANGELOG.md)，并打 `v<版本号>` 标签
+
+当前版本：`0.1.0`
+
 ## 特性
 
 - **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a naval-blue / arc-cyan palette in both light and dark schemes, plus a material layer (1px luminous strokes, HUD radii, screen-space grid + scanlines, Rajdhani UI type, Arc-reactor brand marks).

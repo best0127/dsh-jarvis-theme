@@ -1,6 +1,6 @@
 {
   "name": "@local/jarvis-theme",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "J.A.R.V.I.S. HUD skin and arc-reactor boot sequence for the DSH web client.",

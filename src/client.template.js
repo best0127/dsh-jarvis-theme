@@ -168,6 +168,18 @@ window.__ModuleLoader__.load({
         h('div', { className: 'jv-hint' }, t('row.note')));
     }
 
+    /* HUD window bezel: a 1px frame, top tick strip and a slow sweep. It sits
+       at the viewport edge, so it never crosses body text. */
+    function HudFrame() {
+      if (ReactDOM === null || typeof document === 'undefined') return null;
+      return ReactDOM.createPortal(
+        h('div', { className: 'jv-frame', 'aria-hidden': 'true' },
+          h('span', { className: 'jv-frame-ticks' }),
+          h('span', { className: 'jv-frame-sweep' })),
+        document.body,
+      );
+    }
+
     /* A small account-balance chip pinned to the viewport's lower-right corner.
        It reads the Host route that queries the signed Platform wallet and
        portals to body so the docked composer cannot clip it. */
@@ -382,7 +394,11 @@ window.__ModuleLoader__.load({
 
       step('signals', () => {
         if (ReactDOM === null) return;
-        /* The balance chip is frame-wide, so it also shows without a Session. */
+        /* The balance chip and the window bezel are frame-wide, so they also
+           show without a Session. */
+        ctx.slots.inject('shell.overlay', () => ctx.slots.register({
+          name: 'shell.overlay', id: 'jarvis-frame', order: 89,
+        }, HudFrame));
         ctx.slots.inject('shell.overlay', () => ctx.slots.register({
           name: 'shell.overlay', id: 'jarvis-balance', order: 90,
         }, BalanceChip));

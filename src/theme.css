@@ -9,6 +9,8 @@ body[data-dsh-jarvis] {
   --dsh-font-family-text: 'Jarvis Rajdhani', 'Microsoft YaHei', 'PingFang SC',
     -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
+  --jv-frame-line: rgba(56, 225, 255, 0.4);
+  --jv-frame-glow: rgba(56, 225, 255, 0.18);
 
   /* tighter HUD geometry */
   --dsw-radius-xs: 3px;
@@ -38,6 +40,8 @@ body[data-dsh-jarvis] * {
 }
 
 body[data-dsh-jarvis]:not([data-ds-dark-theme]) {
+  --jv-frame-line: rgba(10, 138, 166, 0.5);
+  --jv-frame-glow: rgba(10, 138, 166, 0.16);
   --jv-glow-soft: rgba(10, 138, 166, 0.12);
 }
 
@@ -45,8 +49,8 @@ body[data-dsh-jarvis][data-ds-dark-theme] {
   --jv-glow-soft: rgba(56, 225, 255, 0.18);
 }
 
-/* Screen-space ambience: soft edge glow and vignette only. No lines or
-   patterns cross the content, so body text stays clean to read. */
+/* Screen-space ambience: a sparse dot lattice plus soft edge glow and vignette.
+   Dots are 1px and 42px apart, so no continuous line ever crosses body text. */
 body[data-dsh-jarvis]::after {
   content: '';
   position: fixed;
@@ -54,14 +58,85 @@ body[data-dsh-jarvis]::after {
   z-index: 2147482000;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(56, 225, 255, 0.05), transparent 62%),
-    radial-gradient(ellipse 140% 90% at 50% 118%, rgba(56, 225, 255, 0.03), transparent 70%),
+    radial-gradient(circle, rgba(56, 225, 255, 0.13) 1px, transparent 1.6px) 0 0 / 42px 42px,
+    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(56, 225, 255, 0.07), transparent 62%),
+    radial-gradient(ellipse 140% 90% at 50% 118%, rgba(56, 225, 255, 0.05), transparent 70%),
     radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(2, 5, 10, 0.5) 100%);
+  animation: jv-ambient 14s ease-in-out infinite;
 }
 body[data-dsh-jarvis]:not([data-ds-dark-theme])::after {
   background:
-    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(10, 138, 166, 0.05), transparent 62%),
+    radial-gradient(circle, rgba(10, 138, 166, 0.12) 1px, transparent 1.6px) 0 0 / 42px 42px,
+    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(10, 138, 166, 0.07), transparent 62%),
     radial-gradient(ellipse 130% 120% at 50% 50%, transparent 55%, rgba(11, 28, 38, 0.08) 100%);
+}
+@keyframes jv-ambient {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-dsh-jarvis]::after { animation: none; }
+}
+
+/* ---------- HUD window bezel ---------- */
+
+.jv-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482050;
+  pointer-events: none;
+  display: none;
+}
+body[data-dsh-jarvis] .jv-frame {
+  display: block;
+}
+.jv-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--jv-frame-line);
+  box-shadow: inset 0 0 26px -12px var(--jv-frame-glow);
+  opacity: 0.75;
+}
+.jv-frame-ticks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--jv-frame-line) 0 1px,
+    transparent 1px 10px
+  );
+  opacity: 0.45;
+}
+.jv-frame-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--dsw-alias-brand-primary) 65%, transparent) 45%,
+    var(--dsw-alias-brand-primary) 50%,
+    color-mix(in srgb, var(--dsw-alias-brand-primary) 65%, transparent) 55%,
+    transparent
+  );
+  filter: blur(0.3px);
+  opacity: 0.85;
+  animation: jv-frame-sweep 8s linear infinite;
+}
+@keyframes jv-frame-sweep {
+  0% { transform: translateX(-240px); opacity: 0; }
+  8% { opacity: 0.85; }
+  92% { opacity: 0.85; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jv-frame-sweep { animation: none; opacity: 0.4; }
 }
 
 body[data-dsh-jarvis] ::selection {

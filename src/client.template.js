@@ -184,6 +184,29 @@ window.__ModuleLoader__.load({
         h('div', { className: 'jv-hint' }, t('row.note')));
     }
 
+    /* A small telemetry chip pinned to the viewport's lower-right corner. It
+       portals to body for the same clipping reason as the scan line. */
+    function StatusHud({ useSession, sessionId }) {
+      const select = typeof useSession === 'function' ? useSession : null;
+      const running = select ? select((snapshot) => snapshot.running === true) : false;
+      const blank = select ? select((snapshot) => snapshot.blank === true) : true;
+      const fault = select ? select((snapshot) => snapshot.lastAgentError !== null) : false;
+      if (ReactDOM === null || typeof document === 'undefined') return null;
+      if (!document.body.hasAttribute('data-dsh-jarvis')) return null;
+      const state = running ? 'active' : fault ? 'fault' : blank ? 'standby' : 'idle';
+      const label = running ? 'ACTIVE' : fault ? 'FAULT' : blank ? 'STANDBY' : 'IDLE';
+      const shortId = typeof sessionId === 'string' && sessionId.length >= 4
+        ? sessionId.slice(0, 4).toUpperCase()
+        : '0000';
+      return ReactDOM.createPortal(
+        h('div', { className: 'jv-hud-panel', 'data-state': state, 'aria-hidden': 'true' },
+          h('span', { className: 'jv-hud-dot' }),
+          h('span', { className: 'jv-hud-label' }, label),
+          h('span', { className: 'jv-hud-id' }, 'CORE // ' + shortId)),
+        document.body,
+      );
+    }
+
     function logError(stage, error) {
       try {
         console.error('[jarvis-theme]', stage, error);
@@ -312,6 +335,13 @@ window.__ModuleLoader__.load({
         ctx.slots.inject('conversation.input.overlay', () => ctx.slots.register({
           name: 'conversation.input.overlay', id: 'jarvis-thinking', order: 40,
         }, ThinkingScan));
+      });
+
+      step('status-hud', () => {
+        if (ReactDOM === null) return;
+        ctx.slots.inject('conversation.input.overlay', () => ctx.slots.register({
+          name: 'conversation.input.overlay', id: 'jarvis-status', order: 41,
+        }, StatusHud));
       });
 
       void revision;

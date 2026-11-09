@@ -247,6 +247,82 @@ body[data-dsh-jarvis] .jv-scan-top {
   body[data-dsh-jarvis] .jv-scan-top { animation: none; opacity: 0.35; }
 }
 
+/* ---------- lower-right status chip ---------- */
+
+body[data-dsh-jarvis] .jv-hud-panel {
+  position: fixed;
+  right: 26px;
+  bottom: 88px;
+  z-index: 2147482400;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 12px;
+  border: 1px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 30%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--dsw-alias-bg-layer-2) 78%, transparent);
+  box-shadow: 0 0 20px -10px color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  font-family: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
+  font-size: 9.5px;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dsw-alias-label-secondary);
+  pointer-events: none;
+  opacity: 0.92;
+}
+body[data-dsh-jarvis] .jv-hud-panel::before,
+body[data-dsh-jarvis] .jv-hud-panel::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: color-mix(in srgb, var(--dsw-alias-brand-primary) 60%, transparent);
+  border-style: solid;
+}
+body[data-dsh-jarvis] .jv-hud-panel::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+body[data-dsh-jarvis] .jv-hud-panel::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 1px 1px 0;
+}
+body[data-dsh-jarvis] .jv-hud-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-idle-primary);
+}
+body[data-dsh-jarvis] .jv-hud-label {
+  font-weight: 600;
+  color: var(--dsw-alias-label-primary);
+}
+body[data-dsh-jarvis] .jv-hud-id {
+  color: color-mix(in srgb, var(--dsw-alias-label-secondary) 70%, transparent);
+}
+body[data-dsh-jarvis] .jv-hud-panel[data-state='active'] .jv-hud-dot {
+  background: var(--dsw-alias-brand-primary);
+  box-shadow: 0 0 10px var(--dsw-alias-brand-primary);
+  animation: jv-hud-pulse 1.6s ease-in-out infinite;
+}
+body[data-dsh-jarvis] .jv-hud-panel[data-state='fault'] .jv-hud-dot {
+  background: var(--dsw-alias-state-error-primary);
+  box-shadow: 0 0 10px var(--dsw-alias-state-error-primary);
+}
+@keyframes jv-hud-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-dsh-jarvis] .jv-hud-panel[data-state='active'] .jv-hud-dot { animation: none; opacity: 1; }
+}
+
 /* ---------- brand artwork ---------- */
 
 .jv-brand-mark,

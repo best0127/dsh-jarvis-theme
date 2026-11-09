@@ -118,43 +118,6 @@ window.__ModuleLoader__.load({
       }, h('span', { className: 'jv-knob' }));
     }
 
-    /* The scan overlay itself lives in the document for the plugin's lifetime;
-       the busy attribute only toggles its opacity, so no re-render or layout
-       can restart the sweep. */
-    let busyTimer = null;
-    function markBusy(busy) {
-      const body = document.body;
-      if (busy) {
-        if (busyTimer !== null) {
-          clearTimeout(busyTimer);
-          busyTimer = null;
-        }
-        body.setAttribute('data-dsh-busy', '');
-        return;
-      }
-      if (busyTimer !== null) return;
-      busyTimer = setTimeout(() => {
-        busyTimer = null;
-        body.removeAttribute('data-dsh-busy');
-      }, 2200);
-    }
-
-    function BusySignal({ useSession, useChat }) {
-      const running = typeof useSession === 'function'
-        ? useSession((snapshot) => snapshot.running === true)
-        : false;
-      /* `running` drops between request steps; live chat activity (streaming
-         partial or executing tool calls) covers those gaps. */
-      const streaming = typeof useChat === 'function'
-        ? useChat((chat) => Boolean(chat && chat.legacy
-          && (chat.legacy.partial !== null || chat.legacy.runningCalls.length > 0)))
-        : false;
-      const busy = running || streaming;
-      React.useEffect(() => { markBusy(busy); }, [busy]);
-      React.useEffect(() => () => { markBusy(false); }, []);
-      return null;
-    }
-
     function SettingsRow(props) {
       const [enabled, setEnabled] = React.useState(() => props.getEnabled());
       const [boot, setBoot] = React.useState(() => props.getBoot());
@@ -417,39 +380,8 @@ window.__ModuleLoader__.load({
         }, SettingsRow));
       });
 
-      step('scanline', () => {
-        ctx.effect(() => {
-          const scan = document.createElement('div');
-          scan.className = 'jv-scan';
-          scan.setAttribute('aria-hidden', 'true');
-          const top = document.createElement('div');
-          top.className = 'jv-scan-top';
-          const line = document.createElement('div');
-          line.className = 'jv-scan-line';
-          const echo = document.createElement('div');
-          echo.className = 'jv-scan-line jv-scan-echo';
-          scan.appendChild(top);
-          scan.appendChild(line);
-          scan.appendChild(echo);
-          document.body.appendChild(scan);
-          return () => {
-            if (busyTimer !== null) {
-              clearTimeout(busyTimer);
-              busyTimer = null;
-            }
-            document.body.removeAttribute('data-dsh-busy');
-            if (scan.parentNode) scan.parentNode.removeChild(scan);
-          };
-        }, 'jarvis-theme: scan overlay');
-      });
-
       step('signals', () => {
         if (ReactDOM === null) return;
-        /* Header utilities stay mounted for the whole Session, unlike the
-           composer overlays that change while a turn streams. */
-        ctx.slots.inject('conversation.session.header.utilities', () => ctx.slots.register({
-          name: 'conversation.session.header.utilities', id: 'jarvis-busy', order: 80,
-        }, BusySignal));
         /* The balance chip is frame-wide, so it also shows without a Session. */
         ctx.slots.inject('shell.overlay', () => ctx.slots.register({
           name: 'shell.overlay', id: 'jarvis-balance', order: 90,

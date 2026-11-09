@@ -19,7 +19,6 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 - **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a naval-blue / arc-cyan palette in both light and dark schemes, plus a material layer (1px luminous strokes, HUD radii, screen-space grid + scanlines, Rajdhani UI type, Arc-reactor brand marks).
 - **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
 - **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), tempo (fast / standard / slow), and Replay (reloads the page with a one-shot flag).
-- **Thinking scan**: while the bound Session is working (thinking, streaming, or executing tools), a cyan scan line sweeps the viewport every 2.6s with a delayed echo, and a faint top edge pulses; both fade out shortly after the work settles.
 - **Balance chip**: a small HUD readout in the lower-right corner shows the signed Platform account's recharge balance (`余额 ¥123.45`) plus any granted bonus (`+¥10.00`); the Host half serves it from `/api/jarvis-theme/balance` over the authenticated connection and never exposes the credential. Failures show `--`, a signed-out account shows `未登录`, and the value refreshes every 60 seconds.
 
 ## Layout
@@ -61,4 +60,5 @@ node scripts/test-splash.mjs
 - The token map targets the 0.2.2 token sheet. A DSH upgrade that renames alias tokens degrades those tokens to the shipped palette; rebuild `tokens.json` from the new `design-platform.css` and re-run the checks.
 - The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
 - Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.
+
 

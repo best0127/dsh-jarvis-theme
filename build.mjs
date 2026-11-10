@@ -71,7 +71,10 @@ const rawTokenMap = { ...tokens.aliases, ...(tokens.statics ?? {}), ...TOKEN_EXT
    accents turn into dark gold; other accents keep their hue. */
 const NEUTRAL_CHROMA = 60;
 const DARK_SURFACE_Y = 96;
-const DARK_SURFACE_FACTOR = 0.62;
+const DARK_SURFACE_LIFT = 14;
+const DARK_SURFACE_SCALE = 0.45;
+const BRIGHT_TEXT_Y = 180;
+const BRIGHT_TEXT_SCALE = 0.8;
 const GOLD = { r: 201, g: 162, b: 39 };
 const GOLD_HUE = 43;
 const GOLD_SATURATION = 0.68;
@@ -156,7 +159,13 @@ function recolor(value, scheme) {
     return formatColor({ ...hslToRgb(GOLD_HUE, GOLD_SATURATION, target), a: 1 });
   }
   let y = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
-  if (scheme === 'dark' && y < DARK_SURFACE_Y) y *= DARK_SURFACE_FACTOR;
+  if (scheme === 'dark') {
+    /* Dark surfaces sit on a charcoal ramp instead of true black (pure black is
+       harsh to read on), and the brightest text is pulled back slightly to
+       reduce glare against it. */
+    if (y < DARK_SURFACE_Y) y = DARK_SURFACE_LIFT + y * DARK_SURFACE_SCALE;
+    else if (y > BRIGHT_TEXT_Y) y = BRIGHT_TEXT_Y + (y - BRIGHT_TEXT_Y) * BRIGHT_TEXT_SCALE;
+  }
   return formatColor({ r: y, g: y, b: y, a: color.a });
 }
 

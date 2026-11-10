@@ -11,7 +11,7 @@ body[data-dsh-jarvis] {
   --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
   --jv-frame-line: rgba(201, 162, 39, 0.4);
   --jv-frame-glow: rgba(201, 162, 39, 0.18);
-  background-color: #050505;
+  background-color: #121212;
 
   /* tighter HUD geometry */
   --dsw-radius-xs: 3px;
@@ -65,7 +65,7 @@ body[data-dsh-jarvis]::after {
     linear-gradient(to bottom, rgba(201, 162, 39, 0.028) 1px, transparent 1px),
     radial-gradient(ellipse 120% 70% at 50% -18%, rgba(201, 162, 39, 0.07), transparent 62%),
     radial-gradient(ellipse 140% 90% at 50% 118%, rgba(201, 162, 39, 0.05), transparent 70%),
-    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.28) 100%);
   background-size: 44px 44px, 44px 44px, auto, auto, auto;
   animation: jv-ambient 14s ease-in-out infinite;
 }
@@ -402,6 +402,7 @@ body:not([data-ds-dark-theme]) .jv-hero-mark {
   letter-spacing: 0.18em;
   color: var(--dsw-alias-label-secondary);
 }
+
 
 
 

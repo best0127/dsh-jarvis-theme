@@ -40,6 +40,8 @@ window.__ModuleLoader__.load({
         'row.pace.normal': 'Standard',
         'row.pace.slow': 'Slow',
         'row.note': 'The boot sequence plays on the next application launch.',
+        'balance.label': 'Balance',
+        'balance.signedOut': 'Signed out',
       },
       zh: {
         'row.title': 'Jarvis 界面',
@@ -56,6 +58,8 @@ window.__ModuleLoader__.load({
         'row.pace.normal': '标准',
         'row.pace.slow': '慢',
         'row.note': '启动动画将在下次打开应用时播放。',
+        'balance.label': '余额',
+        'balance.signedOut': '未登录',
       },
     };
 
@@ -179,9 +183,9 @@ window.__ModuleLoader__.load({
       );
     }
 
-    /* A small account-balance chip pinned to the viewport's lower-right corner.
-       It reads the Host route that queries the signed Platform wallet and
-       portals to body so the docked composer cannot clip it. */
+    /* Account balance as the last item of the composer status row. It reads the
+       Host route that queries the signed Platform wallet; CSS hides the item
+       while the skin is off. */
     function formatWallet(wallets) {
       if (!Array.isArray(wallets) || wallets.length === 0) return null;
       const wallet = wallets.find((entry) => entry && entry.currency === 'CNY') || wallets[0];
@@ -201,9 +205,9 @@ window.__ModuleLoader__.load({
       return total > 0 ? '+' + '\u00a5' + total.toFixed(2) : '';
     }
 
-    function BalanceChip() {
+    function BalanceChip(props) {
+      const t = typeof props.t === 'function' ? props.t : (key) => DICT.en[key] || key;
       const [view, setView] = React.useState({ phase: 'loading' });
-      const [skinOn, setSkinOn] = React.useState(() => document.body.hasAttribute('data-dsh-jarvis'));
       React.useEffect(() => {
         let disposed = false;
         let timer = 0;
@@ -217,20 +221,12 @@ window.__ModuleLoader__.load({
         timer = window.setInterval(read, 60_000);
         const onVisible = () => { if (document.visibilityState === 'visible') read(); };
         document.addEventListener('visibilitychange', onVisible);
-        /* The chip is skin chrome: hide it the moment the skin is switched off. */
-        const observer = typeof MutationObserver === 'function'
-          ? new MutationObserver(() => { setSkinOn(document.body.hasAttribute('data-dsh-jarvis')); })
-          : null;
-        if (observer !== null) observer.observe(document.body, { attributes: true, attributeFilter: ['data-dsh-jarvis'] });
         return () => {
           disposed = true;
           window.clearInterval(timer);
           document.removeEventListener('visibilitychange', onVisible);
-          if (observer !== null) observer.disconnect();
         };
       }, []);
-      if (ReactDOM === null || typeof document === 'undefined') return null;
-      if (!skinOn) return null;
 
       let state = 'loading';
       let amount = '\u2026';
@@ -242,7 +238,7 @@ window.__ModuleLoader__.load({
         const data = view.data || {};
         if (data.signedOut === true) {
           state = 'idle';
-          amount = '\u672a\u767b\u5f55';
+          amount = t('balance.signedOut');
         } else if (data.ok === true) {
           const text = formatWallet(data.wallets);
           if (text === null) {
@@ -258,14 +254,10 @@ window.__ModuleLoader__.load({
           amount = '--';
         }
       }
-      return ReactDOM.createPortal(
-        h('div', { className: 'jv-hud-panel', 'data-state': state, 'aria-hidden': 'true' },
-          h('span', { className: 'jv-hud-dot' }),
-          h('span', { className: 'jv-hud-label' }, '\u4f59\u989d'),
-          h('span', { className: 'jv-hud-amount' }, amount),
-          bonus === '' ? null : h('span', { className: 'jv-hud-bonus' }, bonus)),
-        document.body,
-      );
+      return h('span', { className: 'jv-balance', 'data-state': state },
+        h('span', { className: 'jv-balance-label' }, t('balance.label')),
+        h('span', { className: 'jv-balance-amount' }, amount),
+        bonus === '' ? null : h('span', { className: 'jv-balance-bonus' }, bonus));
     }
 
     function logError(stage, error) {
@@ -393,13 +385,13 @@ window.__ModuleLoader__.load({
 
       step('signals', () => {
         if (ReactDOM === null) return;
-        /* The balance chip and the window bezel are frame-wide, so they also
-           show without a Session. */
+        /* The window bezel is frame-wide; the balance rides the composer status
+           row (conversation.composer.dock) as its last item. */
         ctx.slots.inject('shell.overlay', () => ctx.slots.register({
           name: 'shell.overlay', id: 'jarvis-frame', order: 89,
         }, HudFrame));
-        ctx.slots.inject('shell.overlay', () => ctx.slots.register({
-          name: 'shell.overlay', id: 'jarvis-balance', order: 90,
+        ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register({
+          name: 'conversation.composer.dock', id: 'jarvis-balance', order: 10, locale: 'jarvis',
         }, BalanceChip));
       });
 

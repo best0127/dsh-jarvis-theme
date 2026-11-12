@@ -257,97 +257,43 @@ body[data-dsh-jarvis] [data-menu-material] {
   line-height: 18px;
 }
 
-/* ---------- lower-right balance chip ---------- */
+/* ---------- balance item in the composer status row ---------- */
 
-body[data-dsh-jarvis] .jv-hud-panel {
-  position: fixed;
-  right: 26px;
-  bottom: 88px;
-  z-index: 2147482400;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 12px;
-  border: 1px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 30%, transparent);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--dsw-alias-bg-layer-2) 78%, transparent);
-  box-shadow: 0 0 20px -10px color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent);
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
-  font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', system-ui, sans-serif;
-  font-size: 11px;
-  line-height: 1;
-  letter-spacing: 0.1em;
-  color: var(--dsw-alias-label-secondary);
-  pointer-events: none;
-  opacity: 0.62;
-  transition: opacity 0.2s ease;
-}
-body[data-dsh-jarvis] .jv-hud-panel[data-state='ok'],
-body[data-dsh-jarvis] .jv-hud-panel[data-state='warn'] {
-  opacity: 0.95;
-}
-body[data-dsh-jarvis] .jv-hud-panel::before,
-body[data-dsh-jarvis] .jv-hud-panel::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-color: color-mix(in srgb, var(--dsw-alias-brand-primary) 60%, transparent);
-  border-style: solid;
-}
-body[data-dsh-jarvis] .jv-hud-panel::before {
-  top: -1px;
-  left: -1px;
-  border-width: 1px 0 0 1px;
-}
-body[data-dsh-jarvis] .jv-hud-panel::after {
-  right: -1px;
-  bottom: -1px;
-  border-width: 0 1px 1px 0;
-}
-body[data-dsh-jarvis] .jv-hud-dot {
-  width: 6px;
-  height: 6px;
+.jv-balance {
+  display: none;
+  align-items: baseline;
+  gap: 6px;
+  order: 10;
   flex: none;
-  border-radius: 50%;
-  background: var(--dsw-alias-state-idle-primary);
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: var(--dsh-content-font-size-secondary, 13px);
+  line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px));
+  font-variant-numeric: tabular-nums;
+  color: var(--dsw-alias-label-tertiary);
 }
-body[data-dsh-jarvis] .jv-hud-label {
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  color: var(--dsw-alias-label-secondary);
+body[data-dsh-jarvis] .jv-balance {
+  display: inline-flex;
 }
-body[data-dsh-jarvis] .jv-hud-amount {
-  font-family: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
-  font-size: 12px;
+.jv-balance-label {
+  letter-spacing: 0.04em;
+  color: var(--dsw-alias-label-tertiary);
+}
+.jv-balance-amount {
   font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--dsw-alias-label-primary);
-}
-body[data-dsh-jarvis] .jv-hud-bonus {
-  font-family: 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.02em;
   color: var(--dsw-alias-brand-primary);
 }
-body[data-dsh-jarvis] .jv-hud-panel[data-state='ok'] .jv-hud-dot {
-  background: var(--dsw-alias-brand-primary);
-  box-shadow: 0 0 10px var(--dsw-alias-brand-primary);
+.jv-balance-bonus {
+  font-size: 0.92em;
+  color: var(--dsw-alias-label-tertiary);
 }
-body[data-dsh-jarvis] .jv-hud-panel[data-state='warn'] .jv-hud-dot {
-  background: var(--dsw-alias-state-warn-primary);
-  box-shadow: 0 0 10px var(--dsw-alias-state-warn-primary);
+.jv-balance[data-state='warn'] .jv-balance-amount {
+  color: var(--dsw-alias-state-warn-primary);
 }
-body[data-dsh-jarvis] .jv-hud-panel[data-state='loading'] .jv-hud-dot {
-  animation: jv-hud-pulse 1.6s ease-in-out infinite;
-}
-@keyframes jv-hud-pulse {
-  0%, 100% { opacity: 0.35; }
-  50% { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  body[data-dsh-jarvis] .jv-hud-panel[data-state='loading'] .jv-hud-dot { animation: none; opacity: 1; }
+.jv-balance[data-state='loading'] .jv-balance-amount,
+.jv-balance[data-state='idle'] .jv-balance-amount {
+  color: var(--dsw-alias-label-secondary);
+  font-weight: 500;
 }
 
 /* ---------- brand artwork ---------- */

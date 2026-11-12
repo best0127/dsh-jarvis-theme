@@ -6,6 +6,14 @@
 - **功能更新**：递增次版本号并归零修订号，`0.1.0 → 0.2.0`
 - **不兼容调整**：在 `0.x` 阶段仍按功能更新处理，并在条目中明确标注
 
+## 0.6.0（2026-11-12）
+
+- 按 DSH bundle 发布规范补齐包元数据：`engines.dsh` 兼容范围、`keywords`、`repository` / `homepage`，`files` 纳入 `docs`
+- 重绘插件图标：36×36 viewBox、透明背景、扁平几何，去掉背景块与发光
+- 新增插件详情文档 `docs/DETAIL.md` / `docs/DETAIL.zh.md` 与单图 `docs/preview.svg`，locale 增加 `meta.detail` 并完善标题/描述文案
+- 新增 `market/index.json` 插件市场索引与 `scripts/build-market-index.mjs` 生成脚本（Git 源、commit 固定、内联图标）
+- README 补充安装方式、发布规范与分发说明
+
 ## 0.5.0（2026-11-12）
 
 - 余额显示从右下角浮动芯片移到输入框下方的状态行：作为统计信息（轮次 / token / 上下文）之后的最后一个条目，不再占用画面角落

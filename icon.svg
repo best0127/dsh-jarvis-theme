@@ -1,34 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Jarvis HUD arc reactor">
-  <defs>
-    <radialGradient id="jarvis-icon-core" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#F4FEFF"/>
-      <stop offset="35%" stop-color="#9BEEFF"/>
-      <stop offset="70%" stop-color="#38E1FF"/>
-      <stop offset="100%" stop-color="#0A6D82" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="jarvis-icon-ring" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#6BEDFF"/>
-      <stop offset="55%" stop-color="#38E1FF"/>
-      <stop offset="100%" stop-color="#0F6E86"/>
-    </linearGradient>
-  </defs>
-  <rect x="2" y="2" width="252" height="252" rx="56" fill="#050B12"/>
-  <rect x="2" y="2" width="252" height="252" rx="56" fill="none" stroke="#123241" stroke-width="2"/>
-  <g fill="none" stroke="url(#jarvis-icon-ring)" stroke-linecap="round">
-    <circle cx="128" cy="128" r="88" stroke-width="3" stroke-opacity="0.55" stroke-dasharray="40 8 12 8"/>
-    <circle cx="128" cy="128" r="72" stroke-width="5" stroke-dasharray="196 16" stroke-dashoffset="-24"/>
-    <circle cx="128" cy="128" r="52" stroke-width="2" stroke-opacity="0.7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" role="img" aria-label="Jarvis HUD arc reactor">
+  <g fill="none" stroke="#c9a227" stroke-width="1.5" stroke-linecap="round">
+    <circle cx="18" cy="18" r="12.5" stroke-dasharray="2.4 2"/>
+    <circle cx="18" cy="18" r="8.2" stroke-opacity="0.65"/>
   </g>
-  <g fill="#38E1FF" opacity="0.9">
-    <rect x="122" y="34" width="12" height="16" rx="3"/>
-    <rect x="122" y="206" width="12" height="16" rx="3"/>
-    <rect x="34" y="122" width="16" height="12" rx="3"/>
-    <rect x="206" y="122" width="16" height="12" rx="3"/>
-    <rect x="61" y="61" width="15" height="15" rx="3" transform="rotate(45 68.5 68.5)"/>
-    <rect x="180" y="61" width="15" height="15" rx="3" transform="rotate(45 187.5 68.5)"/>
-    <rect x="61" y="180" width="15" height="15" rx="3" transform="rotate(45 68.5 187.5)"/>
-    <rect x="180" y="180" width="15" height="15" rx="3" transform="rotate(45 187.5 187.5)"/>
+  <g fill="#c9a227">
+    <rect x="16.9" y="3.4" width="2.2" height="2.6" rx="0.6"/>
+    <rect x="16.9" y="30" width="2.2" height="2.6" rx="0.6"/>
+    <rect x="3.4" y="16.9" width="2.6" height="2.2" rx="0.6"/>
+    <rect x="30" y="16.9" width="2.6" height="2.2" rx="0.6"/>
+    <rect x="16.9" y="3.4" width="2.2" height="2.6" rx="0.6" transform="rotate(60 18 18)"/>
+    <rect x="16.9" y="3.4" width="2.2" height="2.6" rx="0.6" transform="rotate(120 18 18)"/>
+    <rect x="16.9" y="3.4" width="2.2" height="2.6" rx="0.6" transform="rotate(240 18 18)"/>
+    <rect x="16.9" y="3.4" width="2.2" height="2.6" rx="0.6" transform="rotate(300 18 18)"/>
   </g>
-  <circle cx="128" cy="128" r="34" fill="url(#jarvis-icon-core)"/>
-  <circle cx="128" cy="128" r="14" fill="#EAFDFF"/>
+  <circle cx="18" cy="18" r="3.2" fill="#e4c466"/>
+  <circle cx="18" cy="18" r="1.1" fill="#f4e6b8"/>
 </svg>

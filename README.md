@@ -4,15 +4,21 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 
 ## 安装
 
-1. 克隆仓库到本地任意目录：
+**方式一：Discover（推荐）** — 在 DSH 的 **Plugins → Discover → Index sources** 里添加市场索引 URL：
 
-   ```sh
-   gh repo clone best0127/dsh-jarvis-theme
-   ```
+```
+https://cdn.jsdelivr.net/gh/best0127/dsh-jarvis-theme@main/market/index.json
+```
 
-2. 把目录作为本地插件包安装到 DSH profile（Plugin Manager 的本地 bundle 安装入口，或让 Agent 使用 `plugin_manager` 的 `install_bundle` 指向该目录）。
-3. 皮肤与品牌替换即时生效；启动动画在下次打开应用时播放（每次启动、可点击或按键跳过）。
-4. 卸载或禁用该 bundle 即恢复原生主题，不会残留样式。
+然后安装 **Jarvis HUD**；从 Git 安装的副本会在 Discover 里提示新版本。
+
+**方式二：本地目录** — 克隆后作为本地插件包安装（**Plugins → Add plugin**，或让 Agent 用 `plugin_manager` 的 `install_bundle` 指向该目录）：
+
+```sh
+gh repo clone best0127/dsh-jarvis-theme
+```
+
+皮肤与品牌替换即时生效；启动动画在下次打开应用时播放（每次启动、可点击或按键跳过）。卸载或禁用该 bundle 即恢复原生主题，不会残留样式。
 
 ## 版本规则
 
@@ -23,7 +29,7 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 - **不兼容调整**：在 `0.x` 阶段仍按功能更新递增，并在更新日志中明确标注
 - 每次发布同步更新 [CHANGELOG.md](CHANGELOG.md)，并打 `v<版本号>` 标签
 
-当前版本：`0.5.0`
+当前版本：`0.6.0`
 
 ## 特性
 
@@ -32,18 +38,46 @@ A J.A.R.V.I.S.-style skin and arc-reactor boot sequence for the DeepSeek Harness
 - **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), tempo (fast / standard / slow), and Replay (reloads the page with a one-shot flag).
 - **Balance readout**: the signed Platform account's recharge balance (`余额 ¥123.45`, plus any granted bonus `+¥10.00`) renders as the last item of the composer status row, beside the turn, token and context readings. The Host half serves it from `/api/jarvis-theme/balance` over the authenticated connection and never exposes the credential; failures show `--`, a signed-out account shows `未登录`, and the value refreshes every 60 seconds.
 
+## 发布规范（DSH bundle）
+
+一个可发布的 bundle 需要满足：
+
+- `package.json` 声明 `dsh.bundle.patch`（Host 行）与可选的 `dsh.client`（浏览器半），并声明 `engines.dsh` 兼容范围；市场按该范围判断安装资格。
+- `locale/en.json`、`locale/zh.json` 提供 `meta.title` / `meta.description`；`meta.description` 写清功能、入口（精确的界面路径）与限制。
+- 插件详情页：`meta.detail` 指向 `docs/DETAIL.md`（中文 `docs/DETAIL.zh.md`），文档只包含一行功能图 `![alt](preview.svg)`；图片为 640×300、无文字、自包含 SVG。
+- 图标遵守 [artwork 规范](https://github.com/best0127/dsh-jarvis-theme)：`viewBox="0 0 36 36"`、透明背景、扁平几何、无发光/阴影/文字；由 Plugin Manager 负责外框与尺寸。
+- `files` 包含全部运行时产物、patch、locale、`docs`、icon、字体；发布前用 `npm pack --dry-run` 检查打包清单。
+
+### 分发渠道
+
+**Git + 插件市场索引（当前采用）**：仓库根部的 `market/index.json` 是格式 1 的市场索引，`scripts/build-market-index.mjs` 从 `package.json`、locale、图标与一个 Git commit 生成它（图标以 32 KiB 以内的内联 data URL 提供，版本指向 commit-pinned 的 Git 源）。发布流程：
+
+```sh
+# 1. 改版本号并更新 CHANGELOG
+node build.mjs && node scripts/verify.mjs && node scripts/test-splash.mjs
+git add -A && git commit -m "发布 vX.Y.Z"
+# 2. 用刚提交的 commit 生成索引，再提交索引
+node scripts/build-market-index.mjs
+git add market/index.json && git commit -m "更新市场索引"
+git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin main --tags
+```
+
+**npm（暂未启用）**：npm 渠道要求把包名从 `@local/...` 改成可公开的包名（例如 `dsh-jarvis-theme` 或自己的 npm scope），删除 `private` 并登录 npm。改包名会改变已安装副本的身份，需要卸载旧包再安装；同时要把 `client.js` 的模块 id、patch 行名同步改名后重新构建。
+
 ## Layout
 
 | Path | Role |
 |---|---|
 | `index.js` | Host half (built): pushes the splash `style` + `html` + `script` rows on every index render, serves the self-hosted display fonts at `/jarvis-theme/fonts/*`, and answers `GET /api/jarvis-theme/balance` from the signed Platform wallet. |
-| `client.js` | Client half (built): applies the token override layer, injects the material stylesheet, registers the brand marks and the settings row. |
+| `client.js` | Client half (built): applies the token override layer, injects the material stylesheet, registers the brand marks, the settings row and the balance readout. |
 | `src/client.template.js`, `src/host.template.js` | Sources for the two built artifacts (markers are replaced by `build.mjs`). |
 | `src/splash.{css,html,js}` | Boot overlay styling, markup, and controller. |
 | `src/theme.css` | Material, settings-row, and brand-artwork styles (scoped to `body[data-dsh-jarvis]` where it is skin material). |
 | `tokens.json` | Generated token map (`aliases` / `statics` / `notes`); `build.mjs` flattens it, applies a small corrections table, and adds the surface tokens in `TOKEN_EXTRA`. |
 | `fonts/` | Orbitron + Rajdhani woff2 subsets with their OFL license texts. |
-| `scripts/verify.mjs`, `scripts/test-splash.mjs` | Artifact checks and a stubbed splash-controller smoke test. |
+| `docs/` | Plugin detail document (`DETAIL.md`, `DETAIL.zh.md`) and its single feature image (`preview.svg`). |
+| `market/index.json` | Format-1 plugin market index listing this bundle with its pinned Git commit. |
+| `scripts/verify.mjs`, `scripts/test-splash.mjs`, `scripts/build-market-index.mjs` | Artifact checks, a stubbed splash-controller smoke test, and the market index generator. |
 
 ## Build
 
@@ -53,7 +87,12 @@ node scripts/verify.mjs
 node scripts/test-splash.mjs
 ```
 
-`build.mjs` inlines `tokens.json`, `src/theme.css`, and `src/splash.*` into the two artifacts and refuses to write a file containing a closing script/style tag sequence. Publishing (change `version`, then install the directory) follows the Plugin Manager bundle install path.
+`build.mjs` inlines `tokens.json`, `src/theme.css`, and `src/splash.*` into the two artifacts and refuses to write a file containing a closing script/style tag sequence. After a release also regenerate the market index and verify the packed file list:
+
+```sh
+node scripts/build-market-index.mjs
+npm pack --dry-run
+```
 
 ## Storage keys
 
@@ -70,14 +109,5 @@ node scripts/test-splash.mjs
 
 - The token map targets the 0.2.2 token sheet. A DSH upgrade that renames alias tokens degrades those tokens to the shipped palette; rebuild `tokens.json` from the new `design-platform.css` and re-run the checks.
 - The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
+- The market index is Git-sourced; Discover updates those copies from Git, while an npm-published copy would update through npm instead. npm publishing is not configured for this repository yet.
 - Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.
-
-
-
-
-
-
-
-
-
-

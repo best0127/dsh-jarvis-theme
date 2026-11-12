@@ -1,9 +1,26 @@
 {
   "name": "@local/jarvis-theme",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "description": "J.A.R.V.I.S. HUD skin and arc-reactor boot sequence for the DSH web client.",
+  "keywords": [
+    "dsh-plugin",
+    "dsh",
+    "deepseek-harness",
+    "theme",
+    "jarvis",
+    "hud",
+    "arc-reactor"
+  ],
+  "homepage": "https://github.com/best0127/dsh-jarvis-theme#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/best0127/dsh-jarvis-theme.git"
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.1 <0.3.0"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -16,6 +33,7 @@
     "client.js",
     "cordis.patch.yml",
     "locale/*.json",
+    "docs",
     "icon.svg",
     "fonts/*"
   ],
@@ -33,4 +51,3 @@
     }
   }
 }
-

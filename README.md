@@ -29,11 +29,11 @@ gh repo clone best0127/dsh-jarvis-theme
 - **不兼容调整**：在 `0.x` 阶段仍按功能更新递增，并在更新日志中明确标注
 - 每次发布同步更新 [CHANGELOG.md](CHANGELOG.md)，并打 `v<版本号>` 标签
 
-当前版本：`0.6.0`
+当前版本：`0.6.1`
 
 ## 特性
 
-- **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a charcoal / dark-gold palette in dark (the light scheme is a neutral light-gray variant), plus a material layer (1px luminous strokes, HUD radii, a low-alpha HUD grid, soft edge glow and vignette, a HUD window bezel with a slow top-edge sweep, Rajdhani UI type, Arc-reactor brand marks).
+- **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a charcoal / dark-gold palette in dark (the light scheme is a neutral light-gray variant), plus a material layer (1px luminous strokes, HUD radii, soft edge glow and vignette, a HUD window bezel with a slow top-edge sweep, Rajdhani UI type, Arc-reactor brand marks).
 - **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
 - **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), tempo (fast / standard / slow), and Replay (reloads the page with a one-shot flag).
 - **Balance readout**: the signed Platform account's recharge balance (`余额 ¥123.45`, plus any granted bonus `+¥10.00`) renders as the last item of the composer status row, beside the turn, token and context readings. The Host half serves it from `/api/jarvis-theme/balance` over the authenticated connection and never exposes the credential; failures show `--`, a signed-out account shows `未登录`, and the value refreshes every 60 seconds.
@@ -111,3 +111,4 @@ npm pack --dry-run
 - The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
 - The market index is Git-sourced; Discover updates those copies from Git, while an npm-published copy would update through npm instead. npm publishing is not configured for this repository yet.
 - Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.
+

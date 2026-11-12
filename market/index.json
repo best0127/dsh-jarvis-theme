@@ -37,16 +37,16 @@
         ]
       },
       "dist-tags": {
-        "latest": "0.6.1"
+        "latest": "0.6.2"
       },
       "versions": [
         {
-          "version": "0.6.1",
-          "publishTimestamp": 1794498662,
+          "version": "0.6.2",
+          "publishTimestamp": 1794498844,
           "source": {
             "type": "git",
             "url": "https://github.com/best0127/dsh-jarvis-theme",
-            "commit": "31985f6d84d2dedf2c76677ba7ed0ea0119e47c0"
+            "commit": "b32c8e5892e8c3cb184952f167f3ccd54037cd7a"
           },
           "engines": {
             "dsh": ">=0.2.2-rc.1 <0.3.0"

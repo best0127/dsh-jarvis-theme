@@ -6,12 +6,10 @@
 /* ---------- typography + material layer ---------- */
 
 body[data-dsh-jarvis] {
-  --dsh-font-family-text: 'Jarvis Rajdhani', 'Microsoft YaHei', 'PingFang SC',
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
   --jv-frame-line: rgba(201, 162, 39, 0.4);
   --jv-frame-glow: rgba(201, 162, 39, 0.18);
-  background-color: #121212;
+  background-color: #161616;
 
   /* tighter HUD geometry */
   --dsw-radius-xs: 3px;
@@ -51,32 +49,9 @@ body[data-dsh-jarvis][data-ds-dark-theme] {
   --jv-glow-soft: rgba(201, 162, 39, 0.18);
 }
 
-/* Screen-space ambience: soft edge glow and a vignette only. No grid, lines
-   or pattern is painted over the content, so body text keeps full contrast. */
-body[data-dsh-jarvis]::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 2147482000;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(201, 162, 39, 0.07), transparent 62%),
-    radial-gradient(ellipse 140% 90% at 50% 118%, rgba(201, 162, 39, 0.05), transparent 70%),
-    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.28) 100%);
-  animation: jv-ambient 14s ease-in-out infinite;
-}
-body[data-dsh-jarvis]:not([data-ds-dark-theme])::after {
-  background:
-    radial-gradient(ellipse 120% 70% at 50% -18%, rgba(138, 106, 18, 0.07), transparent 62%),
-    radial-gradient(ellipse 130% 120% at 50% 50%, transparent 55%, rgba(18, 18, 18, 0.07) 100%);
-}
-@keyframes jv-ambient {
-  0%, 100% { opacity: 0.9; }
-  50% { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  body[data-dsh-jarvis]::after { animation: none; }
-}
+/* No screen-space overlay is painted over the content: the official dark
+   palette's contrast comes from surface steps and text colors, not a tint
+   over the reading area. */
 
 /* ---------- HUD window bezel ---------- */
 

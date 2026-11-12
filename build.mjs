@@ -71,10 +71,8 @@ const rawTokenMap = { ...tokens.aliases, ...(tokens.statics ?? {}), ...TOKEN_EXT
    accents turn into dark gold; other accents keep their hue. */
 const NEUTRAL_CHROMA = 60;
 const DARK_SURFACE_Y = 96;
-const DARK_SURFACE_LIFT = 14;
-const DARK_SURFACE_SCALE = 0.45;
-const BRIGHT_TEXT_Y = 180;
-const BRIGHT_TEXT_SCALE = 0.8;
+const DARK_SURFACE_LIFT = 16;
+const DARK_SURFACE_SCALE = 0.8;
 const GOLD = { r: 201, g: 162, b: 39 };
 const GOLD_HUE = 43;
 const GOLD_SATURATION = 0.68;
@@ -161,10 +159,8 @@ function recolor(value, scheme) {
   let y = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
   if (scheme === 'dark') {
     /* Dark surfaces sit on a charcoal ramp instead of true black (pure black is
-       harsh to read on), and the brightest text is pulled back slightly to
-       reduce glare against it. */
+       harsh to read on); the explicit patch below pins the reading surfaces. */
     if (y < DARK_SURFACE_Y) y = DARK_SURFACE_LIFT + y * DARK_SURFACE_SCALE;
-    else if (y > BRIGHT_TEXT_Y) y = BRIGHT_TEXT_Y + (y - BRIGHT_TEXT_Y) * BRIGHT_TEXT_SCALE;
   }
   return formatColor({ r: y, g: y, b: y, a: color.a });
 }
@@ -173,6 +169,54 @@ const tokenMap = Object.fromEntries(Object.entries(rawTokenMap).map(([name, pair
   light: recolor(pair.light, 'light'),
   dark: recolor(pair.dark, 'dark'),
 }]));
+
+/* Reading surfaces follow the official dark theme's separation: a base near
+   #161616 with clearly stepped panels (#232323 / #2C2C2C / #353535) instead of
+   one nearly-black wash, and label colors at the official contrast level.
+   Accent tokens (gold, warning, error, success) are untouched. */
+const DARK_PATCH = {
+  '--dsw-alias-bg-base': '#161616',
+  '--dsw-alias-bg-layer-1': '#232323',
+  '--dsw-alias-bg-layer-2': '#2C2C2C',
+  '--dsw-alias-bg-layer-3': '#353535',
+  '--dsw-alias-bg-overlay': '#3B3B3B',
+  '--dsw-alias-bg-document-preview': '#161616',
+  '--dsw-alias-bg-multi-select': '#232323',
+  '--dsw-alias-bg-module-platform': '#2C2C2C',
+  '--dsw-alias-bg-skeleton': 'rgba(255, 255, 255, 0.08)',
+  '--dsw-specific-sidebar-fill': '#1C1C1C',
+  '--dsw-specific-input-major': '#2C2C2C',
+  '--dsw-specific-bubble': '#2C2C2C',
+  '--dsw-specific-tip': '#353535',
+  '--dsw-specific-menu': 'rgba(40, 40, 40, 0.94)',
+  '--dsw-menu-surface-fill': 'rgba(30, 30, 30, 0.64)',
+  '--dsw-alias-toast-bg': '#353535',
+  '--dsw-alias-tooltip-bg': '#353535',
+  '--dsw-alias-button-elevated-fill': '#2C2C2C',
+  '--dsw-alias-button-floating-fill': '#2C2C2C',
+  '--dsw-alias-button-floating-hover': '#353535',
+  '--dsw-alias-button-ghost-active-fill': '#353535',
+  '--dsw-alias-markdown-code-block': '#1C1C1C',
+  '--dsw-alias-markdown-code-block-banner': '#232323',
+  '--dsw-alias-markdown-code-segment-selected': '#2C2C2C',
+  '--dsw-alias-markdown-code-segment-unselected': '#1C1C1C',
+  '--dsw-alias-markdown-inline-code': '#232323',
+  '--dsw-alias-markdown-tag': '#232323',
+  '--dsw-alias-markdown-placeholder': '#232323',
+  '--dsw-alias-markdown-citation': '#232323',
+  '--dsw-alias-label-primary': '#F2F4F5',
+  '--dsw-alias-label-primary-bluish': '#F2F4F5',
+  '--dsw-alias-label-secondary': '#CFD3D6',
+  '--dsw-alias-label-tertiary': '#9AA1A8',
+  '--dsw-alias-label-caption': '#9AA1A8',
+  '--dsw-alias-label-document-preview': '#CFD3D6',
+  '--dsw-alias-menu-icon': '#E8EAEC',
+  '--dsw-alias-switch-thumb': '#F2F4F5',
+};
+for (const [name, value] of Object.entries(DARK_PATCH)) {
+  if (tokenMap[name] === undefined) throw new Error(`DARK_PATCH names an unknown token: ${name}`);
+  tokenMap[name] = { ...tokenMap[name], dark: value };
+}
 
 function inline(template, values) {
   let out = template;
@@ -199,4 +243,5 @@ for (const [name, source] of [['index.js', index], ['client.js', client]]) {
 }
 
 console.log(`built index.js (${index.length} bytes) and client.js (${client.length} bytes), ${Object.keys(tokenMap).length} tokens`);
+
 

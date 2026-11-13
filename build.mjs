@@ -218,6 +218,24 @@ for (const [name, value] of Object.entries(DARK_PATCH)) {
   tokenMap[name] = { ...tokenMap[name], dark: value };
 }
 
+/* Structural borders stay neutral like the official themes; gold is reserved
+   for accents (brand, links, focus-adjacent highlights, the HUD bezel). A gold
+   hairline around every card reads as a tinted outline rather than a divider. */
+const BORDER_PATCH = {
+  '--dsw-alias-border-inverted': { light: 'rgba(0, 0, 0, 0)', dark: 'rgba(255, 255, 255, 0.06)' },
+  '--dsw-alias-border-inverted2': { light: 'rgba(0, 0, 0, 0)', dark: 'rgba(255, 255, 255, 0.08)' },
+  '--dsw-alias-border-l1': { light: 'rgba(0, 0, 0, 0.04)', dark: 'rgba(255, 255, 255, 0.06)' },
+  '--dsw-alias-border-l2-darkmode-thin': { light: 'rgba(0, 0, 0, 0.1)', dark: 'rgba(255, 255, 255, 0.06)' },
+  '--dsw-alias-border-l2': { light: 'rgba(0, 0, 0, 0.1)', dark: 'rgba(255, 255, 255, 0.12)' },
+  '--dsw-alias-border-l3': { light: 'rgba(0, 0, 0, 0.12)', dark: 'rgba(255, 255, 255, 0.16)' },
+  '--dsw-alias-border-l4': { light: 'rgba(0, 0, 0, 0.16)', dark: 'rgba(255, 255, 255, 0.2)' },
+  '--dsw-alias-button-ghost-active-border': { light: 'rgba(0, 0, 0, 0.16)', dark: 'rgba(255, 255, 255, 0.2)' },
+};
+for (const [name, pair] of Object.entries(BORDER_PATCH)) {
+  if (tokenMap[name] === undefined) throw new Error(`BORDER_PATCH names an unknown token: ${name}`);
+  tokenMap[name] = { ...tokenMap[name], light: pair.light, dark: pair.dark };
+}
+
 function inline(template, values) {
   let out = template;
   for (const [marker, value] of Object.entries(values)) {

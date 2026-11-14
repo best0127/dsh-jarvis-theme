@@ -29,11 +29,11 @@ gh repo clone best0127/dsh-jarvis-theme
 - **不兼容调整**：在 `0.x` 阶段仍按功能更新递增，并在更新日志中明确标注
 - 每次发布同步更新 [CHANGELOG.md](CHANGELOG.md)，并打 `v<版本号>` 标签
 
-当前版本：`0.7.0`
+当前版本：`0.8.0`
 
 ## 特性
 
-- **Skin**: 138 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens) remapped to a charcoal / dark-gold palette in dark (the light scheme is a neutral light-gray variant), plus a material layer (1px strokes, HUD radii, a HUD window bezel with a slow top-edge sweep, Arc-reactor brand marks). Structural borders stay neutral (`rgba(255,255,255,.06–.2)` in dark, `rgba(0,0,0,.04–.16)` in light) and dark-gold is reserved for accents — brand marks, links, selection, HUD light band and the boot sequence. Dark-mode reading surfaces follow the official dark theme's separation — base `#161616`, panels `#232323` / `#2C2C2C` / `#353535` — with label contrast at the official level (`#F2F4F5` / `#CFD3D6` / `#9AA1A8`); the UI keeps the system font, so only brand marks and the boot overlay use the display faces.
+- **Skin**: 139 design tokens (108 `--dsw-alias-*` + 19 directly consumed `--dsw-static-*` + 11 `--dsw-specific-*` / menu surface tokens + the menu backdrop filter) remapped to a glacier-slate / ice-blue palette (light mode is a frosted paper-white variant). Structural borders stay neutral (`rgba(255,255,255,.06–.2)` in dark, `rgba(0,0,0,.04–.16)` in light) and ice blue is reserved for accents — brand marks, links, focus, selection and key figures. Menus and popovers are frosted glass: translucent surfaces (`rgba(22,32,44,.72)` in dark, `rgba(255,255,255,.72)` in light) behind `blur(12px)`, with an inset ice glow on floating layers only. Dark surfaces ramp `#0B1118` → `#121A24` → `#18222F` → `#1F2B3A`; light ramps `#F3F7FB` → `#FFFFFF` → `#FAFCFE` → `#EBF1F7`. Reading text stays at the official contrast level (`#E8F0F7` / `#ADC0D2` / `#7E90A4` dark; `#0D1620` / `#405464` / `#6C8092` light); the UI keeps the system font, and only brand marks and the boot overlay use the display faces.
 - **Boot sequence**: a ~4.2s arc-reactor ignition overlay injected into the rendered `index` page by the Host half through `webserver/index-inject`. It appears before the React shell mounts, drives a progress counter, waits for the shell, then fades. Click or any key skips it; a watchdog removes it after 12s no matter what.
 - **Settings**: Settings → General → **Jarvis HUD** — skin on/off (live), boot-sequence policy (every launch / daily / first time / off), tempo (fast / standard / slow), and Replay (reloads the page with a one-shot flag).
 - **Balance readout**: the signed Platform account's recharge balance (`余额 ¥123.45`, plus any granted bonus `+¥10.00`) renders as the last item of the composer status row, beside the turn, token and context readings. The Host half serves it from `/api/jarvis-theme/balance` over the authenticated connection and never exposes the credential; failures show `--`, a signed-out account shows `未登录`, and the value refreshes every 60 seconds.
@@ -111,6 +111,7 @@ npm pack --dry-run
 - The boot overlay is a page-load effect: it plays when the application window loads, not on session switches.
 - The market index is Git-sourced; Discover updates those copies from Git, while an npm-published copy would update through npm instead. npm publishing is not configured for this repository yet.
 - Visual verification is manual: run the app, inspect the skin in light and dark, restart to see the boot sequence.
+
 
 
 

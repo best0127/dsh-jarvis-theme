@@ -7,17 +7,16 @@
 
 body[data-dsh-jarvis] {
   --jv-display-family: 'Jarvis Orbitron', 'Jarvis Rajdhani', 'Microsoft YaHei', sans-serif;
-  --jv-frame-line: rgba(201, 162, 39, 0.32);
-  --jv-frame-glow: rgba(201, 162, 39, 0.18);
-  background-color: #161616;
+  background-color: #0B1118;
 
-  /* tighter HUD geometry */
-  --dsw-radius-xs: 3px;
-  --dsw-radius-sm: 5px;
-  --dsw-radius-md: 7px;
-  --dsw-radius-lg: 9px;
-  --dsw-radius-xl: 11px;
-  --dsw-radius-panel: 14px;
+  /* Holo Ice geometry: softer than the HUD bezel version, still slightly
+     tighter than the shipped scale so the glass panels read as one system. */
+  --dsw-radius-xs: 4px;
+  --dsw-radius-sm: 7px;
+  --dsw-radius-md: 10px;
+  --dsw-radius-lg: 13px;
+  --dsw-radius-xl: 16px;
+  --dsw-radius-panel: 18px;
 }
 
 /* 1px luminous stroke instead of the 0.25px hairline; values are redeclared per
@@ -29,84 +28,34 @@ body[data-dsh-jarvis],
 body[data-dsh-jarvis] * {
   --dsw-elevation-stroke: 0 0 0 1px var(--dsw-elevation-stroke-color);
   --dsw-elevation-panel:
-    var(--dsw-elevation-stroke), 0 0 18px -6px var(--jv-glow-soft, rgba(201, 162, 39, 0.16));
+    var(--dsw-elevation-stroke), 0 0 18px -6px var(--jv-glow-soft, rgba(154, 216, 255, 0.12));
   --dsw-elevation-prominent:
     var(--dsw-elevation-stroke), 0 6px 22px -10px rgba(0, 0, 0, 0.55),
-    0 0 26px -8px var(--jv-glow-soft, rgba(201, 162, 39, 0.16));
+    inset 0 0 18px -10px var(--jv-glow-soft, rgba(154, 216, 255, 0.12)),
+    0 0 26px -8px var(--jv-glow-soft, rgba(154, 216, 255, 0.12));
   --dsw-elevation-soft:
-    var(--dsw-elevation-stroke), 0 0 22px -10px var(--jv-glow-soft, rgba(201, 162, 39, 0.14));
+    var(--dsw-elevation-stroke), 0 0 22px -10px var(--jv-glow-soft, rgba(154, 216, 255, 0.1));
   --dsw-hovercard-bg: #101010;
 }
 
 body[data-dsh-jarvis]:not([data-ds-dark-theme]) {
-  --jv-frame-line: rgba(138, 106, 18, 0.4);
-  --jv-frame-glow: rgba(138, 106, 18, 0.16);
-  --jv-glow-soft: rgba(138, 106, 18, 0.08);
-  background-color: #f4f4f4;
+  --jv-glow-soft: rgba(11, 106, 143, 0.1);
+  background-color: #F3F7FB;
 }
 
 body[data-dsh-jarvis][data-ds-dark-theme] {
-  --jv-glow-soft: rgba(201, 162, 39, 0.1);
+  --jv-glow-soft: rgba(154, 216, 255, 0.12);
 }
 
-/* No screen-space overlay is painted over the content: the official dark
-   palette's contrast comes from surface steps and text colors, not a tint
-   over the reading area. */
-
-/* ---------- HUD window bezel ---------- */
-
-.jv-frame {
-  position: fixed;
-  inset: 0;
-  z-index: 2147482050;
-  pointer-events: none;
-  display: none;
-}
-body[data-dsh-jarvis] .jv-frame {
-  display: block;
-}
-.jv-frame::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--jv-frame-line);
-  box-shadow: inset 0 0 26px -12px var(--jv-frame-glow);
-  opacity: 0.75;
-}
-.jv-frame-sweep {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 220px;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--dsw-alias-brand-primary) 65%, transparent) 45%,
-    var(--dsw-alias-brand-primary) 50%,
-    color-mix(in srgb, var(--dsw-alias-brand-primary) 65%, transparent) 55%,
-    transparent
-  );
-  filter: blur(0.3px);
-  opacity: 0.85;
-  animation: jv-frame-sweep 8s linear infinite;
-}
-@keyframes jv-frame-sweep {
-  0% { transform: translateX(-240px); opacity: 0; }
-  8% { opacity: 0.85; }
-  92% { opacity: 0.85; }
-  100% { transform: translateX(100vw); opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .jv-frame-sweep { animation: none; opacity: 0.4; }
-}
+/* No screen-space overlay is painted over the content: the palette's contrast
+   comes from surface steps and text colors, not a tint over the reading area. */
 
 body[data-dsh-jarvis] ::selection {
-  background: rgba(201, 162, 39, 0.26);
+  background: rgba(154, 216, 255, 0.24);
   color: var(--dsw-alias-label-primary);
 }
 body[data-dsh-jarvis]:not([data-ds-dark-theme]) ::selection {
-  background: rgba(138, 106, 18, 0.22);
+  background: rgba(11, 106, 143, 0.2);
 }
 
 /* HUD-adjacent chrome that reads only literals keeps the skin's line language */
@@ -275,7 +224,7 @@ body[data-dsh-jarvis] .jv-balance {
   filter: drop-shadow(0 0 16px var(--dsw-alias-brand-primary));
 }
 body:not([data-ds-dark-theme]) .jv-hero-mark {
-  filter: drop-shadow(0 0 10px rgba(138, 106, 18, 0.35));
+  filter: drop-shadow(0 0 10px rgba(11, 106, 143, 0.32));
 }
 .jv-brand-spin {
   transform-origin: center;
@@ -316,6 +265,7 @@ body:not([data-ds-dark-theme]) .jv-hero-mark {
   letter-spacing: 0.18em;
   color: var(--dsw-alias-label-secondary);
 }
+
 
 
 

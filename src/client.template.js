@@ -172,17 +172,6 @@ window.__ModuleLoader__.load({
         h('div', { className: 'jv-hint' }, t('row.note')));
     }
 
-    /* HUD window bezel: a 1px frame, top tick strip and a slow sweep. It sits
-       at the viewport edge, so it never crosses body text. */
-    function HudFrame() {
-      if (ReactDOM === null || typeof document === 'undefined') return null;
-      return ReactDOM.createPortal(
-        h('div', { className: 'jv-frame', 'aria-hidden': 'true' },
-          h('span', { className: 'jv-frame-sweep' })),
-        document.body,
-      );
-    }
-
     /* Account balance as the last item of the composer status row. It reads the
        Host route that queries the signed Platform wallet; CSS hides the item
        while the skin is off. */
@@ -385,11 +374,7 @@ window.__ModuleLoader__.load({
 
       step('signals', () => {
         if (ReactDOM === null) return;
-        /* The window bezel is frame-wide; the balance rides the composer status
-           row (conversation.composer.dock) as its last item. */
-        ctx.slots.inject('shell.overlay', () => ctx.slots.register({
-          name: 'shell.overlay', id: 'jarvis-frame', order: 89,
-        }, HudFrame));
+        /* The balance rides the composer status row as its last item. */
         ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register({
           name: 'conversation.composer.dock', id: 'jarvis-balance', order: 10, locale: 'jarvis',
         }, BalanceChip));

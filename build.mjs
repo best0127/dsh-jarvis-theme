@@ -60,6 +60,7 @@ const TOKEN_EXTRA = {
   '--dsw-specific-selector': { light: 'rgba(10, 138, 166, 0.12)', dark: 'rgba(56, 225, 255, 0.16)' },
   '--dsw-specific-tip': { light: '#EDF3F9', dark: '#132130' },
   '--dsw-menu-surface-fill': { light: 'rgba(255, 255, 255, 0.7)', dark: 'rgba(14, 24, 34, 0.64)' },
+  '--dsw-menu-backdrop-filter': { light: 'blur(12px) saturate(1.2)', dark: 'blur(12px) saturate(1.2)' },
 };
 
 /* The runtime contract takes one flat token-name -> { light, dark } map, so the
@@ -170,57 +171,98 @@ const tokenMap = Object.fromEntries(Object.entries(rawTokenMap).map(([name, pair
   dark: recolor(pair.dark, 'dark'),
 }]));
 
-/* Reading surfaces follow the official dark theme's separation: a base near
-   #161616 with clearly stepped panels (#232323 / #2C2C2C / #353535) instead of
-   one nearly-black wash, and label colors at the official contrast level.
-   Accent tokens (gold, warning, error, success) are untouched. */
+/* Holo Ice reading surfaces: a glacier-slate ramp (#0B1118 → #1F2B3A) in dark
+   and a cool paper ramp in light. Text sits at the official contrast level. */
 const DARK_PATCH = {
-  '--dsw-alias-bg-base': '#161616',
-  '--dsw-alias-bg-layer-1': '#232323',
-  '--dsw-alias-bg-layer-2': '#2C2C2C',
-  '--dsw-alias-bg-layer-3': '#353535',
-  '--dsw-alias-bg-overlay': '#3B3B3B',
-  '--dsw-alias-bg-document-preview': '#161616',
-  '--dsw-alias-bg-multi-select': '#232323',
-  '--dsw-alias-bg-module-platform': '#2C2C2C',
-  '--dsw-alias-bg-skeleton': 'rgba(255, 255, 255, 0.08)',
-  '--dsw-specific-sidebar-fill': '#1C1C1C',
-  '--dsw-specific-input-major': '#2C2C2C',
-  '--dsw-specific-bubble': '#2C2C2C',
-  '--dsw-specific-tip': '#353535',
-  '--dsw-specific-menu': 'rgba(40, 40, 40, 0.94)',
-  '--dsw-menu-surface-fill': 'rgba(30, 30, 30, 0.64)',
-  '--dsw-alias-toast-bg': '#353535',
-  '--dsw-alias-tooltip-bg': '#353535',
-  '--dsw-alias-button-elevated-fill': '#2C2C2C',
-  '--dsw-alias-button-floating-fill': '#2C2C2C',
-  '--dsw-alias-button-floating-hover': '#353535',
-  '--dsw-alias-button-ghost-active-fill': '#353535',
-  '--dsw-alias-markdown-code-block': '#1C1C1C',
-  '--dsw-alias-markdown-code-block-banner': '#232323',
-  '--dsw-alias-markdown-code-segment-selected': '#2C2C2C',
-  '--dsw-alias-markdown-code-segment-unselected': '#1C1C1C',
-  '--dsw-alias-markdown-inline-code': '#232323',
-  '--dsw-alias-markdown-tag': '#232323',
-  '--dsw-alias-markdown-placeholder': '#232323',
-  '--dsw-alias-markdown-citation': '#232323',
-  '--dsw-alias-label-primary': '#F2F4F5',
-  '--dsw-alias-label-primary-bluish': '#F2F4F5',
-  '--dsw-alias-label-secondary': '#CFD3D6',
-  '--dsw-alias-label-tertiary': '#9AA1A8',
-  '--dsw-alias-label-caption': '#9AA1A8',
-  '--dsw-alias-label-document-preview': '#CFD3D6',
-  '--dsw-alias-menu-icon': '#E8EAEC',
-  '--dsw-alias-switch-thumb': '#F2F4F5',
+  '--dsw-alias-bg-base': '#0B1118',
+  '--dsw-alias-bg-layer-1': '#121A24',
+  '--dsw-alias-bg-layer-2': '#18222F',
+  '--dsw-alias-bg-layer-3': '#1F2B3A',
+  '--dsw-alias-bg-overlay': '#243245',
+  '--dsw-alias-bg-document-preview': '#0B1118',
+  '--dsw-alias-bg-multi-select': '#121A24',
+  '--dsw-alias-bg-module-platform': '#18222F',
+  '--dsw-alias-bg-skeleton': 'rgba(154, 216, 255, 0.08)',
+  '--dsw-specific-sidebar-fill': '#0E151D',
+  '--dsw-specific-input-major': '#151E29',
+  '--dsw-specific-bubble': '#18222F',
+  '--dsw-specific-tip': '#1F2B3A',
+  '--dsw-specific-menu': 'rgba(22, 32, 44, 0.72)',
+  '--dsw-menu-surface-fill': 'rgba(16, 24, 34, 0.6)',
+  '--dsw-alias-toast-bg': '#1F2B3A',
+  '--dsw-alias-tooltip-bg': '#1F2B3A',
+  '--dsw-alias-button-elevated-fill': '#18222F',
+  '--dsw-alias-button-floating-fill': '#18222F',
+  '--dsw-alias-button-floating-hover': '#1F2B3A',
+  '--dsw-alias-button-ghost-active-fill': '#1F2B3A',
+  '--dsw-alias-markdown-code-block': '#0E151D',
+  '--dsw-alias-markdown-code-block-banner': '#121A24',
+  '--dsw-alias-markdown-code-segment-selected': '#18222F',
+  '--dsw-alias-markdown-code-segment-unselected': '#0E151D',
+  '--dsw-alias-markdown-inline-code': '#121A24',
+  '--dsw-alias-markdown-tag': '#121A24',
+  '--dsw-alias-markdown-placeholder': '#121A24',
+  '--dsw-alias-markdown-citation': '#121A24',
+  '--dsw-alias-label-primary': '#E8F0F7',
+  '--dsw-alias-label-primary-bluish': '#E8F0F7',
+  '--dsw-alias-label-secondary': '#ADC0D2',
+  '--dsw-alias-label-tertiary': '#7E90A4',
+  '--dsw-alias-label-caption': '#7E90A4',
+  '--dsw-alias-label-document-preview': '#ADC0D2',
+  '--dsw-alias-menu-icon': '#D2E2F0',
+  '--dsw-alias-switch-thumb': '#F2F8FF',
 };
 for (const [name, value] of Object.entries(DARK_PATCH)) {
   if (tokenMap[name] === undefined) throw new Error(`DARK_PATCH names an unknown token: ${name}`);
   tokenMap[name] = { ...tokenMap[name], dark: value };
 }
 
-/* Structural borders stay neutral like the official themes; gold is reserved
-   for accents (brand, links, focus-adjacent highlights, the HUD bezel). A gold
-   hairline around every card reads as a tinted outline rather than a divider. */
+const LIGHT_PATCH = {
+  '--dsw-alias-bg-base': '#F3F7FB',
+  '--dsw-alias-bg-layer-1': '#FFFFFF',
+  '--dsw-alias-bg-layer-2': '#FAFCFE',
+  '--dsw-alias-bg-layer-3': '#EBF1F7',
+  '--dsw-alias-bg-overlay': '#FFFFFF',
+  '--dsw-alias-bg-document-preview': '#F3F7FB',
+  '--dsw-alias-bg-multi-select': '#EBF1F7',
+  '--dsw-alias-bg-module-platform': '#FFFFFF',
+  '--dsw-alias-bg-skeleton': 'rgba(11, 106, 143, 0.08)',
+  '--dsw-specific-sidebar-fill': '#EEF3F9',
+  '--dsw-specific-input-major': '#FFFFFF',
+  '--dsw-specific-bubble': '#E9F1F7',
+  '--dsw-specific-tip': '#FFFFFF',
+  '--dsw-specific-menu': 'rgba(255, 255, 255, 0.72)',
+  '--dsw-menu-surface-fill': 'rgba(255, 255, 255, 0.6)',
+  '--dsw-alias-toast-bg': '#FFFFFF',
+  '--dsw-alias-tooltip-bg': '#FFFFFF',
+  '--dsw-alias-button-elevated-fill': '#FFFFFF',
+  '--dsw-alias-button-floating-fill': '#FFFFFF',
+  '--dsw-alias-button-floating-hover': '#EBF1F7',
+  '--dsw-alias-button-ghost-active-fill': '#EBF1F7',
+  '--dsw-alias-markdown-code-block': '#F0F5FA',
+  '--dsw-alias-markdown-code-block-banner': '#E7EFF6',
+  '--dsw-alias-markdown-code-segment-selected': '#FFFFFF',
+  '--dsw-alias-markdown-code-segment-unselected': '#F0F5FA',
+  '--dsw-alias-markdown-inline-code': '#EBF1F7',
+  '--dsw-alias-markdown-tag': '#EBF1F7',
+  '--dsw-alias-markdown-placeholder': '#EBF1F7',
+  '--dsw-alias-markdown-citation': '#EBF1F7',
+  '--dsw-alias-label-primary': '#0D1620',
+  '--dsw-alias-label-primary-bluish': '#0D1620',
+  '--dsw-alias-label-secondary': '#405464',
+  '--dsw-alias-label-tertiary': '#6C8092',
+  '--dsw-alias-label-caption': '#6C8092',
+  '--dsw-alias-label-document-preview': '#405464',
+  '--dsw-alias-menu-icon': '#3E5165',
+  '--dsw-alias-switch-thumb': '#FFFFFF',
+};
+for (const [name, value] of Object.entries(LIGHT_PATCH)) {
+  if (tokenMap[name] === undefined) throw new Error(`LIGHT_PATCH names an unknown token: ${name}`);
+  tokenMap[name] = { ...tokenMap[name], light: value };
+}
+
+/* Structural borders stay neutral like the official themes; the ice accent is
+   reserved for brand, links, focus, selection and key figures. */
 const BORDER_PATCH = {
   '--dsw-alias-border-inverted': { light: 'rgba(0, 0, 0, 0)', dark: 'rgba(255, 255, 255, 0.06)' },
   '--dsw-alias-border-inverted2': { light: 'rgba(0, 0, 0, 0)', dark: 'rgba(255, 255, 255, 0.08)' },
@@ -233,6 +275,46 @@ const BORDER_PATCH = {
 };
 for (const [name, pair] of Object.entries(BORDER_PATCH)) {
   if (tokenMap[name] === undefined) throw new Error(`BORDER_PATCH names an unknown token: ${name}`);
+  tokenMap[name] = { ...tokenMap[name], light: pair.light, dark: pair.dark };
+}
+
+/* Replace every accent token the palette generator tinted gold with the Holo
+   Ice ramp: glacier cyan for text/accent roles, translucent ice for washes,
+   deep teal in light mode so text still clears AA on white. */
+const ICE_ACCENT_PATCH = {
+  '--dsw-alias-bg-document-selection': { light: 'rgba(11, 106, 143, 0.12)', dark: 'rgba(154, 216, 255, 0.16)' },
+  '--dsw-alias-brand-primary': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-alias-brand-primary-new-colorprimary-new-color': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-alias-brand-text': { light: '#085570', dark: '#A8DFFF' },
+  '--dsw-alias-button-info-fill': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-alias-button-info-hover': { light: '#085570', dark: '#C2E8FF' },
+  '--dsw-alias-button-primary-fill': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-alias-button-primary-hover': { light: '#085570', dark: '#C2E8FF' },
+  '--dsw-alias-interactive-bg-active': { light: 'rgba(11, 106, 143, 0.12)', dark: 'rgba(154, 216, 255, 0.16)' },
+  '--dsw-alias-interactive-bg-hover': { light: 'rgba(11, 106, 143, 0.08)', dark: 'rgba(154, 216, 255, 0.08)' },
+  '--dsw-alias-interactive-bg-hover-accent': { light: 'rgba(11, 106, 143, 0.12)', dark: 'rgba(154, 216, 255, 0.14)' },
+  '--dsw-alias-label-deep-diving': { light: '#085570', dark: '#C2E8FF' },
+  '--dsw-alias-label-deep-diving-shimmer': { light: 'rgba(11, 106, 143, 0.5)', dark: 'rgba(154, 216, 255, 0.55)' },
+  '--dsw-alias-link': { light: '#085570', dark: '#A8DFFF' },
+  '--dsw-alias-scrollbar-bg-l1': { light: 'rgba(11, 106, 143, 0.26)', dark: 'rgba(154, 216, 255, 0.22)' },
+  '--dsw-alias-scrollbar-bg-l2': { light: 'rgba(11, 106, 143, 0.26)', dark: 'rgba(154, 216, 255, 0.22)' },
+  '--dsw-alias-scrollbar-hover-l1': { light: 'rgba(11, 106, 143, 0.44)', dark: 'rgba(154, 216, 255, 0.4)' },
+  '--dsw-alias-scrollbar-hover-l2': { light: 'rgba(11, 106, 143, 0.44)', dark: 'rgba(154, 216, 255, 0.4)' },
+  '--dsw-alias-state-business-primary': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-alias-turn-trigger-bg': { light: '#FAFCFE', dark: 'rgba(154, 216, 255, 0.08)' },
+  '--dsw-alias-turn-trigger-bg-hover': { light: 'rgba(11, 106, 143, 0.12)', dark: 'rgba(154, 216, 255, 0.14)' },
+  '--dsw-static-blue-450': { light: '#0B6A8F', dark: '#7CC8F0' },
+  '--dsw-static-blue-500': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-static-deepseek-400': { light: '#0B6A8F', dark: '#C2E8FF' },
+  '--dsw-static-deepseek-450': { light: '#085570', dark: '#A8DFFF' },
+  '--dsw-static-deepseek-500': { light: '#0B6A8F', dark: '#9AD8FF' },
+  '--dsw-specific-sidebar-nav-item-active': { light: 'rgba(11, 106, 143, 0.1)', dark: 'rgba(154, 216, 255, 0.14)' },
+  '--dsw-specific-sidebar-nav-item-active-accent': { light: 'rgba(11, 106, 143, 0.14)', dark: 'rgba(154, 216, 255, 0.2)' },
+  '--dsw-specific-bubble-highlight': { light: 'rgba(11, 106, 143, 0.1)', dark: 'rgba(154, 216, 255, 0.14)' },
+  '--dsw-specific-selector': { light: 'rgba(11, 106, 143, 0.1)', dark: 'rgba(154, 216, 255, 0.14)' },
+};
+for (const [name, pair] of Object.entries(ICE_ACCENT_PATCH)) {
+  if (tokenMap[name] === undefined) throw new Error(`ICE_ACCENT_PATCH names an unknown token: ${name}`);
   tokenMap[name] = { ...tokenMap[name], light: pair.light, dark: pair.dark };
 }
 

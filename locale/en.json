@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Jarvis HUD",
-    "description": "Black and charcoal HUD skin with dark-gold accents for the DSH web client. It recolors surfaces, borders, focus and selection, replaces the sidebar and blank-session brand marks, plays an arc-reactor boot sequence, and adds a balance readout in the composer status row. Use Settings → General → Jarvis HUD to switch the skin, choose the boot tempo, set the boot policy or replay the sequence; the skin is presentation only and sends nothing to external services. Light mode stays a neutral light-gray variant.",
+    "description": "Glacier-slate HUD skin with ice-blue accents for the DSH web client. It recolors surfaces, borders, focus and selection, uses frosted-glass menus (translucent panels with a blur), and keeps a warm reactor core only in the brand mark and the boot sequence. Use Settings → General → Jarvis HUD to switch the skin, set the boot policy, choose the tempo or replay the sequence; the skin is presentation only and sends nothing to external services. Light mode is a frosted paper-white variant.",
     "detail": "docs/DETAIL.md"
   }
 }

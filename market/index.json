@@ -16,10 +16,10 @@
         "zh": "Jarvis 界面"
       },
       "description": {
-        "en": "Black and charcoal HUD skin with dark-gold accents for the DSH web client. It recolors surfaces, borders, focus and selection, replaces the sidebar and blank-session brand marks, plays an arc-reactor boot sequence, and adds a balance readout in the composer status row. Use Settings → General → Jarvis HUD to switch the skin, choose the boot tempo, set the boot policy or replay the sequence; the skin is presentation only and sends nothing to external services. Light mode stays a neutral light-gray variant.",
-        "zh": "DSH Web 客户端的黑色 / 炭灰 HUD 主题，暗金强调色。会重绘表面、边框、焦点与选中态，替换侧边栏与空白会话的品牌位，播放电弧反应堆启动动画，并在输入框状态行显示账户余额。在「设置 → 通用 → Jarvis 界面」里可以开关皮肤、调整启动动画节奏、设置播放策略或重播动画；皮肤只影响显示，不会向外部服务发送数据。浅色模式为中性浅灰变体。"
+        "en": "Glacier-slate HUD skin with ice-blue accents for the DSH web client. It recolors surfaces, borders, focus and selection, uses frosted-glass menus (translucent panels with a blur), and keeps a warm reactor core only in the brand mark and the boot sequence. Use Settings → General → Jarvis HUD to switch the skin, set the boot policy, choose the tempo or replay the sequence; the skin is presentation only and sends nothing to external services. Light mode is a frosted paper-white variant.",
+        "zh": "冰川石板色 HUD 皮肤，冰蓝强调色。会重绘表面、边框、焦点与选中态，菜单/浮层使用磨砂玻璃质感（半透明面板 + 模糊），暖金只出现在品牌标记与启动动画的核心。在「设置 → 通用 → Jarvis 界面」里可以开关皮肤、设置启动策略、调整节奏或重播动画；皮肤只影响显示，不向外部服务发送数据。浅色模式为结霜纸白变体。"
       },
-      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJKYXJ2aXMgSFVEIGFyYyByZWFjdG9yIj4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNjOWEyMjciIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgPGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMTIuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMi40IDIiLz4KICAgIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjguMiIgc3Ryb2tlLW9wYWNpdHk9IjAuNjUiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2M5YTIyNyI+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42Ii8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzMCIgd2lkdGg9IjIuMiIgaGVpZ2h0PSIyLjYiIHJ4PSIwLjYiLz4KICAgIDxyZWN0IHg9IjMuNCIgeT0iMTYuOSIgd2lkdGg9IjIuNiIgaGVpZ2h0PSIyLjIiIHJ4PSIwLjYiLz4KICAgIDxyZWN0IHg9IjMwIiB5PSIxNi45IiB3aWR0aD0iMi42IiBoZWlnaHQ9IjIuMiIgcng9IjAuNiIvPgogICAgPHJlY3QgeD0iMTYuOSIgeT0iMy40IiB3aWR0aD0iMi4yIiBoZWlnaHQ9IjIuNiIgcng9IjAuNiIgdHJhbnNmb3JtPSJyb3RhdGUoNjAgMTggMTgpIi8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42IiB0cmFuc2Zvcm09InJvdGF0ZSgxMjAgMTggMTgpIi8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42IiB0cmFuc2Zvcm09InJvdGF0ZSgyNDAgMTggMTgpIi8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42IiB0cmFuc2Zvcm09InJvdGF0ZSgzMDAgMTggMTgpIi8+CiAgPC9nPgogIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjMuMiIgZmlsbD0iI2U0YzQ2NiIvPgogIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjEuMSIgZmlsbD0iI2Y0ZTZiOCIvPgo8L3N2Zz4K",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJKYXJ2aXMgSFVEIGFyYyByZWFjdG9yIj4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5YWQ4ZmYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgPGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMTIuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMi40IDIiLz4KICAgIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjguMiIgc3Ryb2tlLW9wYWNpdHk9IjAuNjUiLz4KICA8L2c+CiAgPGcgZmlsbD0iIzlhZDhmZiI+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42Ii8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzMCIgd2lkdGg9IjIuMiIgaGVpZ2h0PSIyLjYiIHJ4PSIwLjYiLz4KICAgIDxyZWN0IHg9IjMuNCIgeT0iMTYuOSIgd2lkdGg9IjIuNiIgaGVpZ2h0PSIyLjIiIHJ4PSIwLjYiLz4KICAgIDxyZWN0IHg9IjMwIiB5PSIxNi45IiB3aWR0aD0iMi42IiBoZWlnaHQ9IjIuMiIgcng9IjAuNiIvPgogICAgPHJlY3QgeD0iMTYuOSIgeT0iMy40IiB3aWR0aD0iMi4yIiBoZWlnaHQ9IjIuNiIgcng9IjAuNiIgdHJhbnNmb3JtPSJyb3RhdGUoNjAgMTggMTgpIi8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42IiB0cmFuc2Zvcm09InJvdGF0ZSgxMjAgMTggMTgpIi8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42IiB0cmFuc2Zvcm09InJvdGF0ZSgyNDAgMTggMTgpIi8+CiAgICA8cmVjdCB4PSIxNi45IiB5PSIzLjQiIHdpZHRoPSIyLjIiIGhlaWdodD0iMi42IiByeD0iMC42IiB0cmFuc2Zvcm09InJvdGF0ZSgzMDAgMTggMTgpIi8+CiAgPC9nPgogIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjMuMiIgZmlsbD0iI2Q2ZjBmZiIvPgogIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTgiIHI9IjEuMSIgZmlsbD0iI2YyZmFmZiIvPgo8L3N2Zz4KDQo=",
       "author": "best0127",
       "homepage": "https://github.com/best0127/dsh-jarvis-theme#readme",
       "repository": {
@@ -37,16 +37,16 @@
         ]
       },
       "dist-tags": {
-        "latest": "0.7.0"
+        "latest": "0.8.0"
       },
       "versions": [
         {
-          "version": "0.7.0",
-          "publishTimestamp": 1794582595,
+          "version": "0.8.0",
+          "publishTimestamp": 1794641746,
           "source": {
             "type": "git",
             "url": "https://github.com/best0127/dsh-jarvis-theme",
-            "commit": "114ab7f03b72f1b140d22b938b0bf607b44ce7e6"
+            "commit": "908582310cd779b63556c30786da4701e51c22bf"
           },
           "engines": {
             "dsh": ">=0.2.2-rc.1 <0.3.0"
